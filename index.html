@@ -1,8 +1,15 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>AnatomyOS Остеология</title>
-<meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&family=Spectral:ital,wght@0,500;1,400;1,500&family=JetBrains+Mono:wght@400;500&display=swap">
 <style>
+[hidden]{display:none!important}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0}
 /* Layout: one-screen lab bench. Sidebar of regions/quiz on the left, 3D stage fills the rest, specimen card floats on the stage. Phone: stage on top, panel below. */
 :root{
   --bg:#eef2f1; --surface:#ffffff; --ink:#15201e; --muted:#5a6966; --line:#d7dfdd;
@@ -295,8 +302,26 @@ function resize(){
 }
 new ResizeObserver(resize).observe(stage);
 
+// Сетки лежат в gzip (~1.7 МБ). Показываем прогресс скачивания; распаковываем сами, если сервер не сделал этого за нас.
+async function fetchMesh(url){
+  const r=await fetch(url); if(!r.ok) throw new Error(r.status+" "+url);
+  const total=+r.headers.get("content-length")||1.7e6, chunks=[]; let got=0;
+  const reader=r.body.getReader();
+  for(;;){
+    const {done,value}=await reader.read(); if(done) break;
+    chunks.push(value); got+=value.length;
+    $("loading").textContent="Загружаю скелет… "+Math.min(99,Math.round(got/total*100))+"%";
+  }
+  let bytes=new Uint8Array(got), o=0; for(const c of chunks){bytes.set(c,o);o+=c.length;}
+  if(bytes[0]===0x1f&&bytes[1]===0x8b){
+    $("loading").textContent="Собираю модель…";
+    bytes=new Uint8Array(await new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream("gzip"))).arrayBuffer());
+  }
+  return bytes.buffer;
+}
+
 async function load(){
-  const [meta,buf]=await Promise.all([fetch("bones_mesh.json").then(r=>r.json()),fetch("bones-mesh.wasm") /* сырые бинарные данные сеток; расширение .wasm только ради хостинга */.then(r=>r.arrayBuffer())]);
+  const [meta,buf]=await Promise.all([fetch("bones_mesh.json").then(r=>r.json()),fetchMesh("bones-mesh.bin.gz")]);
   const s=meta.ext/65535, lo=meta.lo, k=0.001;
   for(const p of meta.parts){
     const q=new Uint16Array(buf,p.vo,p.v*3), idx=new Uint16Array(buf,p.io,p.f*3);
