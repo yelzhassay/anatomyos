@@ -1,0 +1,204 @@
+FMA12519	atlas
+FMA12520	axis
+FMA7487	body of sternum
+FMA32651	distal phalanx of left big toe
+FMA32657	distal phalanx of left fourth toe
+FMA23953	distal phalanx of left index finger
+FMA23959	distal phalanx of left little finger
+FMA32659	distal phalanx of left little toe
+FMA23955	distal phalanx of left middle finger
+FMA23957	distal phalanx of left ring finger
+FMA32653	distal phalanx of left second toe
+FMA32655	distal phalanx of left third toe
+FMA23951	distal phalanx of left thumb
+FMA32650	distal phalanx of right big toe
+FMA32656	distal phalanx of right fourth toe
+FMA24460	distal phalanx of right index finger
+FMA24463	distal phalanx of right little finger
+FMA32658	distal phalanx of right little toe
+FMA24461	distal phalanx of right middle finger
+FMA24462	distal phalanx of right ring finger
+FMA32652	distal phalanx of right second toe
+FMA32654	distal phalanx of right third toe
+FMA24459	distal phalanx of right thumb
+FMA9991	eighth thoracic vertebra
+FMA10059	eleventh thoracic vertebra
+FMA52740	ethmoid
+FMA12523	fifth cervical vertebra
+FMA13076	fifth lumbar vertebra
+FMA9922	fifth thoracic vertebra
+FMA13072	first lumbar vertebra
+FMA9165	first thoracic vertebra
+FMA12522	fourth cervical vertebra
+FMA13075	fourth lumbar vertebra
+FMA9248	fourth thoracic vertebra
+FMA52734	frontal bone
+FMA52749	hyoid bone
+FMA24498	left calcaneus
+FMA24447	left capitate
+FMA13323	left clavicle
+FMA24529	left cuboid bone
+FMA8310	left eighth rib
+FMA8532	left eleventh rib
+FMA24475	left femur
+FMA24481	left fibula
+FMA24473	left fifth metacarpal bone
+FMA24516	left fifth metatarsal bone
+FMA8093	left fifth rib
+FMA24465	left first metacarpal bone
+FMA24508	left first metatarsal bone
+FMA7987	left first rib
+FMA24471	left fourth metacarpal bone
+FMA24514	left fourth metatarsal bone
+FMA8148	left fourth rib
+FMA24449	left hamate
+FMA16587	left hip bone
+FMA23131	left humerus
+FMA54738	left inferior nasal concha
+FMA24524	left intermediate cuneiform bone
+FMA53646	left lacrimal bone
+FMA24526	left lateral cuneiform bone
+FMA24438	left lunate
+FMA53650	left maxilla
+FMA24522	left medial cuneiform bone
+FMA53648	left nasal bone
+FMA8391	left ninth rib
+FMA53656	left palatine bone
+FMA52789	left parietal bone
+FMA24487	left patella
+FMA24442	left pisiform
+FMA23465	left radius
+FMA24436	left scaphoid
+FMA13396	left scapula
+FMA24467	left second metacarpal bone
+FMA24510	left second metatarsal bone
+FMA8012	left second rib
+FMA8256	left seventh rib
+FMA8202	left sixth rib
+FMA24483	left talus
+FMA52739	left temporal bone
+FMA8472	left tenth rib
+FMA24469	left third metacarpal bone
+FMA24512	left third metatarsal bone
+FMA8039	left third rib
+FMA24478	left tibia
+FMA24444	left trapezium
+FMA24445	left trapezoid
+FMA24440	left triquetral
+FMA8534	left twelfth rib
+FMA23468	left ulna
+FMA52893	left zygomatic bone
+FMA52748	mandible
+FMA7486	manubrium
+FMA32647	middle phalanx of left fourth toe
+FMA23938	middle phalanx of left index finger
+FMA23944	middle phalanx of left little finger
+FMA230988	middle phalanx of left little toe
+FMA23940	middle phalanx of left middle finger
+FMA23942	middle phalanx of left ring finger
+FMA32643	middle phalanx of left second toe
+FMA32645	middle phalanx of left third toe
+FMA32646	middle phalanx of right fourth toe
+FMA24455	middle phalanx of right index finger
+FMA24458	middle phalanx of right little finger
+FMA230986	middle phalanx of right little toe
+FMA24456	middle phalanx of right middle finger
+FMA24457	middle phalanx of right ring finger
+FMA32642	middle phalanx of right second toe
+FMA32644	middle phalanx of right third toe
+FMA24501	navicular bone of left foot
+FMA24500	navicular bone of right foot
+FMA10014	ninth thoracic vertebra
+FMA52735	occipital bone
+FMA43254	proximal phalanx of left big toe
+FMA32639	proximal phalanx of left fourth toe
+FMA71915	proximal phalanx of left index finger
+FMA66791	proximal phalanx of left little finger
+FMA32641	proximal phalanx of left little toe
+FMA71908	proximal phalanx of left middle finger
+FMA71916	proximal phalanx of left ring finger
+FMA32635	proximal phalanx of left second toe
+FMA32637	proximal phalanx of left third toe
+FMA65470	proximal phalanx of left thumb
+FMA43253	proximal phalanx of right big toe
+FMA32638	proximal phalanx of right fourth toe
+FMA24451	proximal phalanx of right index finger
+FMA24454	proximal phalanx of right little finger
+FMA32640	proximal phalanx of right little toe
+FMA24452	proximal phalanx of right middle finger
+FMA24453	proximal phalanx of right ring finger
+FMA32634	proximal phalanx of right second toe
+FMA32636	proximal phalanx of right third toe
+FMA24450	proximal phalanx of right thumb
+FMA24497	right calcaneus
+FMA24446	right capitate
+FMA13322	right clavicle
+FMA24528	right cuboid bone
+FMA8283	right eighth rib
+FMA8531	right eleventh rib
+FMA24474	right femur
+FMA24480	right fibula
+FMA24472	right fifth metacarpal bone
+FMA24515	right fifth metatarsal bone
+FMA8066	right fifth rib
+FMA24464	right first metacarpal bone
+FMA24507	right first metatarsal bone
+FMA7857	right first rib
+FMA24470	right fourth metacarpal bone
+FMA24513	right fourth metatarsal bone
+FMA7957	right fourth rib
+FMA24448	right hamate
+FMA16586	right hip bone
+FMA23130	right humerus
+FMA54737	right inferior nasal concha
+FMA24523	right intermediate cuneiform bone
+FMA53645	right lacrimal bone
+FMA24525	right lateral cuneiform bone
+FMA24437	right lunate
+FMA53649	right maxilla
+FMA24521	right medial cuneiform bone
+FMA53647	right nasal bone
+FMA8364	right ninth rib
+FMA53655	right palatine bone
+FMA52788	right parietal bone
+FMA24486	right patella
+FMA24441	right pisiform
+FMA23464	right radius
+FMA24435	right scaphoid
+FMA13395	right scapula
+FMA24466	right second metacarpal bone
+FMA24509	right second metatarsal bone
+FMA7882	right second rib
+FMA8229	right seventh rib
+FMA8175	right sixth rib
+FMA24482	right talus
+FMA52738	right temporal bone
+FMA8445	right tenth rib
+FMA24468	right third metacarpal bone
+FMA24511	right third metatarsal bone
+FMA7909	right third rib
+FMA24477	right tibia
+FMA24443	right trapezium
+FMA23725	right trapezoid
+FMA24439	right triquetral
+FMA8533	right twelfth rib
+FMA23467	right ulna
+FMA52892	right zygomatic bone
+FMA16202	sacrum
+FMA13073	second lumbar vertebra
+FMA9187	second thoracic vertebra
+FMA45098	sesamoid bone of left foot
+FMA45097	sesamoid bone of right foot
+FMA12525	seventh cervical vertebra
+FMA9968	seventh thoracic vertebra
+FMA12524	sixth cervical vertebra
+FMA9945	sixth thoracic vertebra
+FMA52736	sphenoid bone
+FMA10037	tenth thoracic vertebra
+FMA12521	third cervical vertebra
+FMA13074	third lumbar vertebra
+FMA9209	third thoracic vertebra
+FMA10081	twelfth thoracic vertebra
+FMA9710	vomer
+FMA7488	xiphoid process
+FMA52749	hyoid bone

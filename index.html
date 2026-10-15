@@ -1,0 +1,550 @@
+<title>AnatomyOS Остеология</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&family=Spectral:ital,wght@0,500;1,400;1,500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one-screen lab bench. Sidebar of regions/quiz on the left, 3D stage fills the rest, specimen card floats on the stage. Phone: stage on top, panel below. */
+:root{
+  --bg:#eef2f1; --surface:#ffffff; --ink:#15201e; --muted:#5a6966; --line:#d7dfdd;
+  --accent:#0d6b72; --accent-soft:#d8eeee; --ok:#2f8f57; --bad:#c2453c;
+  --stage-a:#e9efed; --stage-b:#c9d5d2;
+  --f-display:"Spectral",Georgia,"Times New Roman",serif;
+  --f-body:"Onest",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0e1413; --surface:#161f1e; --ink:#e6eeec; --muted:#91a19e; --line:#26332f;
+  --accent:#55c3c8; --accent-soft:#163536; --ok:#4cc27c; --bad:#ef6a5f;
+  --stage-a:#1b2524; --stage-b:#080c0c; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0e1413; --surface:#161f1e; --ink:#e6eeec; --muted:#91a19e; --line:#26332f;
+  --accent:#55c3c8; --accent-soft:#163536; --ok:#4cc27c; --bad:#ef6a5f;
+  --stage-a:#1b2524; --stage-b:#080c0c; color-scheme:dark}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:14px;line-height:1.45;overflow:hidden}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.app{height:100%;display:grid;grid-template-columns:320px 1fr;grid-template-rows:auto 1fr}
+header{grid-column:1/-1;display:flex;align-items:center;gap:14px;padding-block:10px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  border-bottom:1px solid var(--line);background:var(--surface)}
+.brand{font-family:var(--f-display);font-weight:500;font-size:19px;letter-spacing:.01em;white-space:nowrap}
+.brand i{color:var(--accent);font-style:italic}
+.tag{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.tabs{margin-left:auto;display:flex;background:var(--bg);border:1px solid var(--line);border-radius:999px;padding:3px}
+.tabs button{border:0;background:none;padding:6px 14px;border-radius:999px;font-weight:500;color:var(--muted)}
+.tabs button[aria-selected="true"]{background:var(--accent);color:var(--surface)}
+
+aside{border-right:1px solid var(--line);background:var(--surface);display:flex;flex-direction:column;min-height:0}
+.pane{flex:1;overflow:auto;padding:14px 16px 20px;display:flex;flex-direction:column;gap:12px;min-height:0}
+.search{width:100%;padding:9px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg)}
+.tools{display:flex;gap:6px;flex-wrap:wrap}
+.btn{border:1px solid var(--line);background:var(--surface);padding:6px 11px;border-radius:7px;font-size:13px}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--surface);font-weight:600}
+.region{border-top:1px solid var(--line);padding-top:8px}
+.region-h{display:flex;align-items:center;gap:8px}
+.region-h .toggle{flex:1;display:flex;align-items:center;gap:8px;border:0;background:none;padding:4px 0;text-align:left;font-weight:600}
+.region-h .count{font-family:var(--f-mono);font-size:11px;color:var(--muted);font-weight:400}
+.chev{display:inline-block;width:10px;transition:transform .15s;color:var(--muted)}
+.region.open .chev{transform:rotate(90deg)}
+.eye{border:1px solid var(--line);background:none;border-radius:6px;font-size:11px;padding:2px 7px;color:var(--muted)}
+.eye[aria-pressed="false"]{text-decoration:line-through;opacity:.6}
+.list{display:none;flex-direction:column;margin:4px 0 6px}
+.region.open .list,.searching .list{display:flex}
+.searching .region-h .chev{visibility:hidden}
+.item{border:0;background:none;text-align:left;padding:5px 8px;border-radius:6px;display:flex;flex-direction:column}
+.item:hover{background:var(--bg)}
+.item.sel{background:var(--accent-soft)}
+.item .la{font-family:var(--f-display);font-style:italic;font-size:12.5px;color:var(--muted)}
+.item.off{opacity:.45}
+.empty{color:var(--muted);font-size:13px}
+
+.stage{position:relative;min-width:0;min-height:0;background:radial-gradient(120% 90% at 50% 30%,var(--stage-a),var(--stage-b))}
+#cv{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none}
+.hint{position:absolute;top:12px;right:max(14px,env(safe-area-inset-right,0px));font-size:12px;color:var(--muted);background:color-mix(in srgb,var(--surface) 80%,transparent);padding:5px 10px;border-radius:999px;border:1px solid var(--line)}
+.views{position:absolute;top:12px;left:14px;display:flex;gap:4px}
+.views .btn{font-size:12px;padding:4px 9px;background:color-mix(in srgb,var(--surface) 85%,transparent)}
+.loading{position:absolute;inset:0;display:grid;place-items:center;color:var(--muted);font-size:14px}
+.card{position:absolute;left:14px;bottom:max(14px,env(safe-area-inset-bottom,0px));width:min(380px,calc(100% - 28px));max-height:calc(100% - 70px);overflow:auto;
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;box-shadow:0 10px 30px -12px rgba(0,0,0,.35);display:flex;flex-direction:column;gap:8px}
+.card .eyebrow{padding-right:26px;display:flex;gap:8px;align-items:center;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);font-weight:600}
+.card .eyebrow .fma{margin-left:auto;font-family:var(--f-mono);letter-spacing:0;text-transform:none;color:var(--muted);font-weight:400}
+.card h2{margin:0;font-size:21px;line-height:1.2;font-weight:600;text-wrap:balance}
+.card .latin{font-family:var(--f-display);font-style:italic;font-size:17px;color:var(--muted);margin-top:-4px}
+.card p{margin:0;max-width:62ch}
+.card .x{position:absolute;top:8px;right:8px;border:0;background:none;font-size:18px;color:var(--muted);width:28px;height:28px;border-radius:6px}
+.card .x:hover{background:var(--bg)}
+
+.q-head{font-family:var(--f-display);font-size:20px;font-weight:500}
+.field{display:flex;flex-direction:column;gap:5px}
+.field label{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.field select{padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg)}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.seg button{border:1px solid var(--line);background:var(--bg);border-radius:8px;padding:9px 8px;text-align:left;display:flex;flex-direction:column;gap:2px}
+.seg button small{color:var(--muted);font-size:12px}
+.seg button[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
+.progress{display:flex;gap:3px}
+.progress span{flex:1;height:5px;border-radius:3px;background:var(--line)}
+.progress span.ok{background:var(--ok)}.progress span.bad{background:var(--bad)}.progress span.cur{background:var(--accent)}
+.score{font-family:var(--f-mono);font-size:12px;color:var(--muted);display:flex;justify-content:space-between}
+.prompt{border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;background:var(--bg)}
+.prompt .k{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.prompt .t{font-size:18px;font-weight:600;margin-top:2px}
+.prompt .la{font-family:var(--f-display);font-style:italic;color:var(--muted)}
+.opts{display:flex;flex-direction:column;gap:6px}
+.opts button{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:9px 12px;text-align:left}
+.opts button:hover:not(:disabled){border-color:var(--accent)}
+.opts button.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 14%,var(--surface))}
+.opts button.bad{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 14%,var(--surface))}
+.fb{font-size:13.5px;padding:9px 12px;border-radius:8px}
+.fb.ok{background:color-mix(in srgb,var(--ok) 14%,var(--surface));color:var(--ink)}
+.fb.bad{background:color-mix(in srgb,var(--bad) 14%,var(--surface));color:var(--ink)}
+.big{font-family:var(--f-display);font-size:44px;font-weight:500;line-height:1}
+.mist{display:flex;flex-direction:column;gap:2px}
+.credit{font-size:11px;color:var(--muted);border-top:1px solid var(--line);padding:10px 16px;line-height:1.4}
+.credit a{color:inherit}
+
+@media (max-width:760px){
+  .app{grid-template-columns:1fr;grid-template-rows:auto 46% 1fr}
+  .stage{grid-row:2}
+  aside{grid-row:3;border-right:0;border-top:1px solid var(--line)}
+  .pane{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+  .tag{display:none}
+  .hint{display:none}
+  .card{left:8px;right:8px;width:auto;bottom:8px;max-height:calc(100% - 52px);padding:12px 14px}
+  .card h2{font-size:18px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="app">
+  <header>
+    <div class="brand">AnatomyOS <i>Osteologia</i></div>
+    <div class="tag">MVP · скелет человека</div>
+    <div class="tabs" role="tablist">
+      <button id="tab-atlas" role="tab" aria-selected="true">Атлас</button>
+      <button id="tab-quiz" role="tab" aria-selected="false">Тест</button>
+    </div>
+  </header>
+
+  <aside>
+    <div class="pane" id="pane-atlas">
+      <input id="search" class="search" type="search" placeholder="Поиск: «бедренная», «femur», «C7»…" autocomplete="off">
+      <div class="tools">
+        <button class="btn" id="show-all">Показать все</button>
+        <button class="btn" id="expand">Развернуть</button>
+      </div>
+      <div id="regions"></div>
+    </div>
+    <div class="pane" id="pane-quiz" hidden></div>
+    <div class="credit">3D-модели: <a href="https://dbarchive.biosciencedbc.jp/en/bodyparts3d/lic.html" target="_blank" rel="noopener">BodyParts3D</a>, © The Database Center for Life Science, CC BY-SA 2.1 Japan. Упрощены для веба.</div>
+  </aside>
+
+  <main class="stage" id="stage">
+    <canvas id="cv"></canvas>
+    <div class="views">
+      <button class="btn" data-view="front">Спереди</button>
+      <button class="btn" data-view="side">Сбоку</button>
+      <button class="btn" data-view="back">Сзади</button>
+    </div>
+    <div class="hint">Вращение: мышь · Масштаб: колесо · Сдвиг: правая кнопка</div>
+    <div class="loading" id="loading">Загружаю скелет…</div>
+    <div class="card" id="card" hidden></div>
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+(()=>{
+"use strict";
+/* ---------- Анатомические данные ---------- */
+const REGIONS=[
+  ["skull","Череп","Cranium"],["spine","Позвоночник","Columna vertebralis"],["thorax","Грудная клетка","Thorax"],
+  ["arm","Верхняя конечность","Membrum superius"],["hand","Кисть","Manus"],
+  ["leg","Нижняя конечность","Membrum inferius"],["foot","Стопа","Pes"]];
+const REG=Object.fromEntries(REGIONS.map(r=>[r[0],{ru:r[1],la:r[2]}]));
+const ORD={first:1,second:2,third:3,fourth:4,fifth:5,sixth:6,seventh:7,eighth:8,ninth:9,tenth:10,eleventh:11,twelfth:12};
+const ROM=["","I","II","III","IV","V","VI","VII","VIII","IX","X","XI","XII"];
+// key: [region, ru, la, description]
+const BASE={
+"frontal bone":["skull","Лобная кость","Os frontale","Непарная кость мозгового черепа. Образует лоб, верхние стенки глазниц и переднюю часть свода черепа. Внутри находится лобная пазуха."],
+"parietal bone":["skull","Теменная кость","Os parietale","Парная четырёхугольная кость свода черепа. С одноимённой костью соединяется сагиттальным швом, с лобной венечным, с затылочной ламбдовидным."],
+"occipital bone":["skull","Затылочная кость","Os occipitale","Непарная кость задней части свода и основания черепа. Через её большое отверстие полость черепа сообщается с позвоночным каналом; мыщелки сочленяются с атлантом."],
+"temporal bone":["skull","Височная кость","Os temporale","Парная кость боковой стенки и основания черепа. В пирамиде находятся органы слуха и равновесия; есть нижнечелюстная ямка и сосцевидный отросток."],
+"sphenoid bone":["skull","Клиновидная кость","Os sphenoidale","Непарная кость в центре основания черепа. Тело с турецким седлом (ложе гипофиза), большие и малые крылья, крыловидные отростки."],
+"ethmoid":["skull","Решётчатая кость","Os ethmoidale","Непарная лёгкая кость между глазницами. Участвует в образовании полости носа, глазниц и передней черепной ямки; через продырявленную пластинку проходят обонятельные нервы."],
+"maxilla":["skull","Верхняя челюсть","Maxilla","Парная кость лицевого черепа. Несёт верхние зубы, образует дно глазницы, стенки полости носа и большую часть твёрдого нёба. Внутри верхнечелюстная (гайморова) пазуха."],
+"mandible":["skull","Нижняя челюсть","Mandibula","Единственная подвижная кость черепа. Тело несёт нижние зубы, две ветви мыщелковыми отростками образуют височно-нижнечелюстные суставы."],
+"zygomatic bone":["skull","Скуловая кость","Os zygomaticum","Парная кость скулы и латеральной стенки глазницы. Височным отростком вместе с височной костью образует скуловую дугу."],
+"nasal bone":["skull","Носовая кость","Os nasale","Парная продолговатая пластинка, которая образует костную спинку носа."],
+"lacrimal bone":["skull","Слёзная кость","Os lacrimale","Самая маленькая кость лицевого черепа, в медиальной стенке глазницы. Участвует в образовании ямки слёзного мешка."],
+"palatine bone":["skull","Нёбная кость","Os palatinum","Парная Г-образная кость. Горизонтальная пластинка образует заднюю часть твёрдого нёба, перпендикулярная участвует в стенке полости носа."],
+"inferior nasal concha":["skull","Нижняя носовая раковина","Concha nasalis inferior","Парная тонкая самостоятельная кость на латеральной стенке полости носа. Под ней открывается носослёзный канал."],
+"vomer":["skull","Сошник","Vomer","Непарная тонкая пластинка, образующая заднюю и нижнюю часть костной перегородки носа."],
+"hyoid bone":["skull","Подъязычная кость","Os hyoideum","Подковообразная кость шеи между нижней челюстью и гортанью. С другими костями не сочленяется и держится на мышцах и связках. Относится к костям черепа."],
+"atlas":["spine","Атлант (C1)","Atlas","Первый шейный позвонок. Не имеет тела и остистого отростка: передняя и задняя дуги и латеральные массы. Верхние суставные ямки сочленяются с мыщелками затылочной кости."],
+"axis":["spine","Осевой позвонок (C2)","Axis","Второй шейный позвонок. Имеет зуб, вокруг которого вместе с головой вращается атлант."],
+"sacrum":["spine","Крестец","Os sacrum","Образован сросшимися пятью крестцовыми позвонками. Вместе с тазовыми костями формирует таз; основание сочленяется с V поясничным позвонком."],
+"manubrium":["thorax","Рукоятка грудины","Manubrium sterni","Верхняя, самая широкая часть грудины. Имеет яремную вырезку и вырезки для ключиц и I рёбер."],
+"body of sternum":["thorax","Тело грудины","Corpus sterni","Средняя и самая длинная часть грудины. По краям вырезки для хрящей II–VII рёбер. С рукояткой образует угол грудины на уровне II ребра."],
+"xiphoid process":["thorax","Мечевидный отросток","Processus xiphoideus","Нижняя, самая малая часть грудины. Форма вариабельна; у молодых людей часто остаётся хрящевым."],
+"clavicle":["arm","Ключица","Clavicula","S-образная трубчатая кость между грудиной и лопаткой. Единственная кость, связывающая верхнюю конечность со скелетом туловища; хорошо прощупывается под кожей."],
+"scapula":["arm","Лопатка","Scapula","Плоская треугольная кость на задней поверхности грудной клетки. Ость, акромион, клювовидный отросток и суставная впадина для головки плечевой кости."],
+"humerus":["arm","Плечевая кость","Humerus","Длинная трубчатая кость плеча. Проксимально головка, анатомическая и хирургическая шейки, бугорки; дистально мыщелок с блоком и головочкой для костей предплечья."],
+"radius":["arm","Лучевая кость","Radius","Латеральная кость предплечья, со стороны большого пальца. Широкий дистальный конец образует лучезапястный сустав; при пронации кость вращается вокруг локтевой."],
+"ulna":["arm","Локтевая кость","Ulna","Медиальная кость предплечья, со стороны мизинца. Проксимально локтевой отросток и блоковидная вырезка для блока плечевой кости."],
+"scaphoid":["hand","Ладьевидная кость","Os scaphoideum","Кость проксимального ряда запястья со стороны большого пальца. Ломается чаще остальных костей запястья, обычно при падении на вытянутую руку."],
+"lunate":["hand","Полулунная кость","Os lunatum","Кость проксимального ряда запястья в форме полумесяца, между ладьевидной и трёхгранной."],
+"triquetral":["hand","Трёхгранная кость","Os triquetrum","Кость проксимального ряда запястья со стороны мизинца. На ладонной поверхности сочленяется с гороховидной костью."],
+"pisiform":["hand","Гороховидная кость","Os pisiforme","Самая маленькая кость запястья: сесамовидная кость в сухожилии локтевого сгибателя запястья. Лежит на трёхгранной кости."],
+"trapezium":["hand","Кость-трапеция","Os trapezium","Кость дистального ряда запястья у основания большого пальца. Седловидной поверхностью образует подвижный запястно-пястный сустав I пальца."],
+"trapezoid":["hand","Трапециевидная кость","Os trapezoideum","Небольшая кость дистального ряда запястья, сочленяется со II пястной костью."],
+"capitate":["hand","Головчатая кость","Os capitatum","Самая крупная кость запястья, в центре дистального ряда. Сочленяется с III пястной костью."],
+"hamate":["hand","Крючковидная кость","Os hamatum","Кость дистального ряда со стороны мизинца, с крючком на ладонной стороне. Сочленяется с IV и V пястными костями."],
+"hip bone":["leg","Тазовая кость","Os coxae","Образована сросшимися подвздошной, лобковой и седалищной костями. В месте их слияния вертлужная впадина для головки бедренной кости."],
+"femur":["leg","Бедренная кость","Femur","Самая длинная и прочная кость тела. Проксимально головка, шейка, большой и малый вертелы; дистально медиальный и латеральный мыщелки коленного сустава."],
+"patella":["leg","Надколенник","Patella","Самая крупная сесамовидная кость, лежит в сухожилии четырёхглавой мышцы бедра. Защищает коленный сустав спереди и увеличивает рычаг мышцы."],
+"tibia":["leg","Большеберцовая кость","Tibia","Медиальная и главная опорная кость голени. Передний край и медиальная поверхность прощупываются под кожей; дистально медиальная лодыжка."],
+"fibula":["leg","Малоберцовая кость","Fibula","Тонкая латеральная кость голени. В опоре почти не участвует; дистальный конец образует латеральную лодыжку, стабилизирующую голеностопный сустав."],
+"talus":["foot","Таранная кость","Talus","Через неё масса тела передаётся с голени на стопу. Блок входит в вилку голеностопного сустава; мышцы к кости не крепятся."],
+"calcaneus":["foot","Пяточная кость","Calcaneus","Самая крупная кость стопы, образует пятку. К пяточному бугру крепится ахиллово сухожилие."],
+"navicular bone of foot":["foot","Ладьевидная кость стопы","Os naviculare","Кость предплюсны на медиальной стороне стопы, между таранной и клиновидными костями. Бугристость прощупывается и служит ориентиром."],
+"cuboid bone":["foot","Кубовидная кость","Os cuboideum","Кость латерального края предплюсны, сочленяется с пяточной и с IV–V плюсневыми костями. Снизу борозда для сухожилия длинной малоберцовой мышцы."],
+"medial cuneiform bone":["foot","Медиальная клиновидная кость","Os cuneiforme mediale","Самая крупная из трёх клиновидных костей, сочленяется с I плюсневой костью."],
+"intermediate cuneiform bone":["foot","Промежуточная клиновидная кость","Os cuneiforme intermedium","Самая маленькая из клиновидных костей, сочленяется со II плюсневой костью."],
+"lateral cuneiform bone":["foot","Латеральная клиновидная кость","Os cuneiforme laterale","Клиновидная кость рядом с кубовидной, сочленяется с III плюсневой костью."],
+"sesamoid bone of foot":["foot","Сесамовидные кости I пальца","Ossa sesamoidea pedis","Две сесамовидные кости в сухожилиях под головкой I плюсневой кости. Принимают нагрузку при отталкивании стопой."]
+};
+const ORDER=Object.keys(BASE);
+const FINGER={thumb:1,"index finger":2,"middle finger":3,"ring finger":4,"little finger":5,"big toe":1,"second toe":2,"third toe":3,"fourth toe":4,"little toe":5};
+const PH={proximal:["Проксимальная","proximalis",1],middle:["Средняя","media",2],distal:["Дистальная","distalis",3]};
+
+function describe(en){
+  let side=null; const sm=en.match(/\b(left|right)\b/);
+  if(sm){side=sm[1]==="right"?"R":"L"; en=en.replace(/\b(left|right) /,"");}
+  let m, o={region:null,ru:en,la:"",desc:"",sort:999};
+  if(BASE[en]){const b=BASE[en];Object.assign(o,{region:b[0],ru:b[1],la:b[2],desc:b[3],sort:ORDER.indexOf(en)});}
+  else if(m=en.match(/^(\w+) (cervical|thoracic|lumbar) vertebra$/)){
+    const n=ORD[m[1]], t=m[2];
+    const ru={cervical:"шейный",thoracic:"грудной",lumbar:"поясничный"}[t], la={cervical:"cervicalis",thoracic:"thoracica",lumbar:"lumbalis"}[t];
+    const code=({cervical:"C",thoracic:"Th",lumbar:"L"})[t]+n;
+    let d={cervical:"Шейный позвонок: небольшое тело, отверстия в поперечных отростках для позвоночной артерии, раздвоенный на конце остистый отросток.",
+      thoracic:"Грудной позвонок: на теле рёберные ямки для головок рёбер, на поперечных отростках ямки для бугорков рёбер. Длинные остистые отростки направлены вниз и лежат черепицеобразно.",
+      lumbar:"Поясничный позвонок: самое массивное тело, рёберных ямок нет, остистый отросток широкий и горизонтальный. Несёт наибольшую нагрузку."}[t];
+    if(t==="cervical"&&n===7) d="Выступающий позвонок. Его длинный нераздвоенный остистый отросток легко прощупывается у основания шеи и служит ориентиром для счёта позвонков.";
+    if(t==="lumbar"&&n===5) d+=" Снизу сочленяется с крестцом.";
+    Object.assign(o,{region:"spine",ru:`${ROM[n]} ${ru} позвонок (${code})`,la:`Vertebra ${la} ${ROM[n]}`,desc:d,sort:100+({cervical:0,thoracic:20,lumbar:40})[t]+n});
+  }
+  else if(m=en.match(/^(\w+) rib$/)){
+    const n=ORD[m[1]];
+    let d=n<=7?"Истинное ребро: соединяется с грудиной собственным хрящом.":n<=10?"Ложное ребро: хрящ присоединяется к хрящу вышележащего ребра и участвует в рёберной дуге.":"Колеблющееся ребро: передний конец свободно лежит в мышцах брюшной стенки.";
+    if(n===1) d+=" Самое короткое и широкое, лежит почти горизонтально; сверху бугорок передней лестничной мышцы и борозды подключичных артерии и вены.";
+    Object.assign(o,{region:"thorax",ru:`${ROM[n]} ребро`,la:`Costa ${ROM[n]}`,desc:"Длинная изогнутая плоская кость с головкой, шейкой и телом. "+d,sort:200+n});
+  }
+  else if(m=en.match(/^(\w+) (metacarpal|metatarsal) bone$/)){
+    const n=ORD[m[1]], hand=m[2]==="metacarpal";
+    let d=hand?"Короткая трубчатая кость пясти: основание, тело и головка. Головки пястных костей образуют костяшки кулака.":"Короткая трубчатая кость плюсны. Вместе с костями предплюсны формирует своды стопы.";
+    if(hand&&n===1) d+=" I пястная кость самая короткая и массивная.";
+    if(!hand&&n===1) d+=" I плюсневая кость самая толстая и несёт наибольшую нагрузку при ходьбе.";
+    if(!hand&&n===5) d+=" На основании бугристость V плюсневой кости, ориентир на латеральном крае стопы.";
+    Object.assign(o,{region:hand?"hand":"foot",ru:`${ROM[n]} ${hand?"пястная":"плюсневая"} кость`,la:`Os ${hand?"metacarpi":"metatarsi"} ${ROM[n]}`,desc:d,sort:300+n});
+  }
+  else if(m=en.match(/^(proximal|middle|distal) phalanx of (.+)$/)){
+    const p=PH[m[1]], n=FINGER[m[2]], hand=!/toe/.test(m[2]);
+    let d=hand?"Короткая трубчатая кость пальца кисти. У большого пальца две фаланги, у остальных по три.":"Короткая кость пальца стопы. У большого пальца две фаланги, у остальных по три; фаланги стопы короче, чем на кисти.";
+    if(m[1]==="distal") d+=" Дистальная фаланга заканчивается бугристостью, на которой лежит ноготь.";
+    Object.assign(o,{region:hand?"hand":"foot",ru:`${p[0]} фаланга ${ROM[n]} пальца ${hand?"кисти":"стопы"}`,la:`Phalanx ${p[1]} digiti ${ROM[n]} ${hand?"manus":"pedis"}`,desc:d,sort:400+n*10+p[2],phalanx:true});
+  }
+  if(/sesamoid/.test(en)) o.phalanx=true;
+  o.side=side;
+  return o;
+}
+const sideRu=s=>s==="R"?"справа":s==="L"?"слева":"";
+const sideLa=s=>s==="R"?"dext.":s==="L"?"sin.":"";
+const full=b=>b.ru+(b.side?", "+sideRu(b.side):"");
+
+/* ---------- 3D ---------- */
+const $=id=>document.getElementById(id);
+const stage=$("stage"), cv=$("cv");
+const renderer=new THREE.WebGLRenderer({canvas:cv,antialias:true,alpha:true});
+renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
+renderer.outputEncoding=THREE.sRGBEncoding;
+const scene=new THREE.Scene();
+const camera=new THREE.PerspectiveCamera(32,1,0.01,50);
+scene.add(camera);
+scene.add(new THREE.HemisphereLight(0xffffff,0x6b7774,0.75));
+const key=new THREE.DirectionalLight(0xffffff,0.75); key.position.set(0.6,1,1); camera.add(key);
+const rim=new THREE.DirectionalLight(0xdfeeff,0.35); rim.position.set(-1,0.4,-1); scene.add(rim);
+const controls=new THREE.OrbitControls(camera,cv);
+controls.enableDamping=true; controls.dampingFactor=0.09; controls.minDistance=0.12; controls.maxDistance=8;
+const HOME={t:new THREE.Vector3(0,0.86,0),p:new THREE.Vector3(0,0.9,3.7)};
+
+const COL={bone:new THREE.Color(0xe7dcc6),sel:new THREE.Color(0x45aab1),ok:new THREE.Color(0x45b56f),bad:new THREE.Color(0xd9564b),dim:new THREE.Color(0xb9b2a4)};
+const bones=[]; const byMesh=new Map();
+let selected=null, hovered=null;
+
+function resize(){
+  const r=stage.getBoundingClientRect();
+  renderer.setSize(r.width,r.height,false);
+  camera.aspect=r.width/Math.max(1,r.height); camera.updateProjectionMatrix();
+}
+new ResizeObserver(resize).observe(stage);
+
+async function load(){
+  const [meta,buf]=await Promise.all([fetch("bones_mesh.json").then(r=>r.json()),fetch("bones-mesh.wasm") /* сырые бинарные данные сеток; расширение .wasm только ради хостинга */.then(r=>r.arrayBuffer())]);
+  const s=meta.ext/65535, lo=meta.lo, k=0.001;
+  for(const p of meta.parts){
+    const q=new Uint16Array(buf,p.vo,p.v*3), idx=new Uint16Array(buf,p.io,p.f*3);
+    const pos=new Float32Array(p.v*3);
+    for(let i=0;i<p.v;i++){
+      const x=lo[0]+q[i*3]*s, y=lo[1]+q[i*3+1]*s, z=lo[2]+q[i*3+2]*s;
+      pos[i*3]=x*k; pos[i*3+1]=z*k; pos[i*3+2]=-(y+110)*k; // Z-up мм → Y-up м, лицом к +Z
+    }
+    const g=new THREE.BufferGeometry();
+    g.setAttribute("position",new THREE.BufferAttribute(pos,3));
+    g.setIndex(new THREE.BufferAttribute(idx.slice(),1));
+    g.computeVertexNormals(); g.computeBoundingSphere();
+    const mat=new THREE.MeshStandardMaterial({color:COL.bone.clone(),roughness:0.62,metalness:0});
+    const mesh=new THREE.Mesh(g,mat); scene.add(mesh);
+    const b=Object.assign(describe(p.en),{id:p.id,en:p.en,mesh});
+    if(!b.region){mesh.visible=false;continue;}
+    bones.push(b); byMesh.set(mesh,b);
+  }
+  bones.sort((a,b)=>REGIONS.findIndex(r=>r[0]===a.region)-REGIONS.findIndex(r=>r[0]===b.region)||a.sort-b.sort||(a.side||"").localeCompare(b.side||"").valueOf()*-1);
+  $("loading").hidden=true;
+  buildList();
+  setView("front",true);
+}
+
+/* ---------- Цвета и камера ---------- */
+const mark=new Map(); // bone -> 'sel'|'ok'|'bad'
+function paint(){
+  for(const b of bones){
+    const m=mark.get(b), mat=b.mesh.material;
+    mat.color.copy(m?COL[m]:COL.bone);
+    mat.emissive.setHex(b===hovered&&!m?0x2a2a22:(m?0x0b1a1a:0));
+  }
+}
+let anim=null;
+function flyTo(target,pos,ms=650){
+  anim={t0:performance.now(),ms,ft:controls.target.clone(),fp:camera.position.clone(),tt:target.clone(),tp:pos.clone()};
+}
+function focus(b){
+  const sph=b.mesh.geometry.boundingSphere, c=sph.center.clone();
+  const dir=camera.position.clone().sub(controls.target).normalize();
+  const dist=Math.max(sph.radius/Math.sin(THREE.MathUtils.degToRad(camera.fov/2))*1.6,0.22);
+  flyTo(c,c.clone().add(dir.multiplyScalar(dist)));
+}
+function setView(v,instant){
+  const t=HOME.t.clone(), d=HOME.p.z;
+  const p=v==="side"?new THREE.Vector3(-d,0.95,0):v==="back"?new THREE.Vector3(0,0.95,-d):HOME.p.clone();
+  if(instant){controls.target.copy(t);camera.position.copy(p);} else flyTo(t,p);
+}
+document.querySelectorAll("[data-view]").forEach(b=>b.addEventListener("click",()=>setView(b.dataset.view)));
+
+/* ---------- Выбор мышью ---------- */
+const ray=new THREE.Raycaster(), ptr=new THREE.Vector2();
+function pick(e){
+  const r=cv.getBoundingClientRect();
+  ptr.set(((e.clientX-r.left)/r.width)*2-1,-((e.clientY-r.top)/r.height)*2+1);
+  ray.setFromCamera(ptr,camera);
+  const hit=ray.intersectObjects(bones.filter(b=>b.mesh.visible).map(b=>b.mesh),false)[0];
+  return hit?byMesh.get(hit.object):null;
+}
+let down=null;
+cv.addEventListener("pointerdown",e=>{down={x:e.clientX,y:e.clientY};});
+cv.addEventListener("pointerup",e=>{
+  if(!down) return; const moved=Math.hypot(e.clientX-down.x,e.clientY-down.y); down=null;
+  if(moved>6) return;
+  const b=pick(e);
+  if(mode==="quiz") quizClick(b); else select(b,false);
+});
+cv.addEventListener("pointermove",e=>{
+  if(e.pointerType!=="mouse"||e.buttons) return;
+  const b=pick(e); if(b!==hovered){hovered=b;cv.style.cursor=b?"pointer":"grab";paint();}
+});
+cv.addEventListener("pointerleave",()=>{if(hovered){hovered=null;paint();}});
+
+/* ---------- Атлас ---------- */
+let mode="atlas";
+const card=$("card");
+function select(b,fly){
+  if(mode==="atlas"){ mark.clear(); if(b) mark.set(b,"sel"); }
+  selected=b; paint();
+  document.querySelectorAll(".item").forEach(el=>el.classList.toggle("sel",!!b&&el.dataset.id===b.id));
+  if(!b){card.hidden=true;return;}
+  if(fly) focus(b);
+  const r=REG[b.region];
+  card.innerHTML=`<button class="x" id="card-x" aria-label="Закрыть">×</button>
+   <div class="eyebrow"><span>${r.ru}</span><span class="fma">${b.id}</span></div>
+   <h2>${full(b)}</h2>
+   <div class="latin">${b.la}${b.side?" "+sideLa(b.side):""}</div>
+   <p>${b.desc}</p>
+   <div class="tools"><button class="btn primary" id="c-focus">Приблизить</button><button class="btn" id="c-iso">Только эта кость</button><button class="btn" id="c-hide">Скрыть</button></div>`;
+  card.hidden=false;
+  $("card-x").onclick=()=>select(null);
+  $("c-focus").onclick=()=>focus(b);
+  $("c-iso").onclick=()=>{bones.forEach(x=>x.mesh.visible=x===b);syncEyes();focus(b);};
+  $("c-hide").onclick=()=>{b.mesh.visible=false;syncEyes();select(null);};
+  const li=document.querySelector(`.item[data-id="${b.id}"]`);
+  if(li){li.closest(".region").classList.add("open");li.scrollIntoView({block:"nearest"});}
+}
+function buildList(){
+  const host=$("regions"); host.innerHTML="";
+  for(const [id,ru] of REGIONS){
+    const list=bones.filter(b=>b.region===id);
+    const sec=document.createElement("section"); sec.className="region"; sec.dataset.region=id;
+    sec.innerHTML=`<div class="region-h"><button class="toggle" aria-expanded="false"><span class="chev">›</span>${ru} <span class="count">${list.length}</span></button><button class="eye" aria-pressed="true" title="Показать или скрыть отдел">вид</button></div><div class="list"></div>`;
+    const L=sec.querySelector(".list");
+    for(const b of list){
+      const it=document.createElement("button"); it.className="item"; it.dataset.id=b.id;
+      it.dataset.q=(full(b)+" "+b.la+" "+b.en).toLowerCase();
+      it.innerHTML=`<span>${full(b)}</span><span class="la">${b.la}${b.side?" "+sideLa(b.side):""}</span>`;
+      it.onclick=()=>{b.mesh.visible=true;syncEyes();select(b,true);};
+      L.appendChild(it);
+    }
+    sec.querySelector(".toggle").onclick=e=>{sec.classList.toggle("open");e.currentTarget.setAttribute("aria-expanded",sec.classList.contains("open"));};
+    sec.querySelector(".eye").onclick=()=>{const on=list.some(b=>b.mesh.visible);list.forEach(b=>b.mesh.visible=!on);syncEyes();};
+    host.appendChild(sec);
+  }
+  syncEyes();
+}
+function syncEyes(){
+  document.querySelectorAll(".region").forEach(sec=>{
+    const list=bones.filter(b=>b.region===sec.dataset.region);
+    sec.querySelector(".eye").setAttribute("aria-pressed",list.some(b=>b.mesh.visible));
+  });
+  document.querySelectorAll(".item").forEach(el=>{const b=bones.find(x=>x.id===el.dataset.id);el.classList.toggle("off",!b.mesh.visible);});
+}
+$("show-all").onclick=()=>{bones.forEach(b=>b.mesh.visible=true);syncEyes();setView("front");};
+$("expand").onclick=e=>{const all=[...document.querySelectorAll(".region")];const open=!all.every(s=>s.classList.contains("open"));all.forEach(s=>s.classList.toggle("open",open));e.target.textContent=open?"Свернуть":"Развернуть";};
+$("search").addEventListener("input",e=>{
+  const q=e.target.value.trim().toLowerCase(); const host=$("regions");
+  host.classList.toggle("searching",!!q);
+  let any=false;
+  document.querySelectorAll(".region").forEach(sec=>{
+    let n=0; sec.querySelectorAll(".item").forEach(it=>{const ok=!q||it.dataset.q.includes(q);it.hidden=!ok;if(ok)n++;});
+    sec.hidden=!!q&&n===0; if(n) any=true;
+  });
+  let em=$("empty"); if(!em){em=document.createElement("div");em.id="empty";em.className="empty";em.textContent="Ничего не найдено. Попробуйте русское или латинское название.";host.appendChild(em);}
+  em.hidden=any;
+});
+
+/* ---------- Тест ---------- */
+const QN=10;
+const qp=$("pane-quiz");
+let quiz={type:"name",region:"all"};
+function setMode(m){
+  mode=m;
+  $("tab-atlas").setAttribute("aria-selected",m==="atlas"); $("tab-quiz").setAttribute("aria-selected",m==="quiz");
+  $("pane-atlas").hidden=m!=="atlas"; qp.hidden=m!=="quiz";
+  mark.clear(); select(null);
+  if(m==="quiz") quizSetup(); else paint();
+}
+$("tab-atlas").onclick=()=>setMode("atlas");
+$("tab-quiz").onclick=()=>setMode("quiz");
+
+function quizSetup(){
+  quiz.qs=null;
+  qp.innerHTML=`<div class="q-head">Проверка знаний</div>
+   <div class="field"><label>Формат</label><div class="seg">
+     <button id="t-name" aria-pressed="${quiz.type==="name"}"><b>Назови кость</b><small>Кость подсвечена, выберите название</small></button>
+     <button id="t-find" aria-pressed="${quiz.type==="find"}"><b>Найди на модели</b><small>Дано название, кликните кость</small></button>
+   </div></div>
+   <div class="field"><label for="q-region">Отдел скелета</label><select id="q-region">
+     <option value="all">Весь скелет</option>${REGIONS.map(r=>`<option value="${r[0]}" ${quiz.region===r[0]?"selected":""}>${r[1]}</option>`).join("")}
+   </select></div>
+   <p class="empty">${QN} вопросов. В режиме «Весь скелет» фаланги пальцев не спрашиваются: для них выберите «Кисть» или «Стопа».</p>
+   <button class="btn primary" id="q-start">Начать тест</button>`;
+  $("q-region").value=quiz.region;
+  $("t-name").onclick=()=>{quiz.type="name";quizSetup();};
+  $("t-find").onclick=()=>{quiz.type="find";quizSetup();};
+  $("q-region").onchange=e=>quiz.region=e.target.value;
+  $("q-start").onclick=quizStart;
+}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]];}return a;}
+function quizStart(){
+  let pool=bones.filter(b=>quiz.region==="all"?!b.phalanx:b.region===quiz.region);
+  quiz.qs=shuffle(pool.slice()).slice(0,QN); quiz.i=0; quiz.res=[];
+  bones.forEach(b=>b.mesh.visible=true); syncEyes();
+  quizAsk();
+}
+function progressHtml(){
+  return `<div class="progress">${quiz.qs.map((_,i)=>`<span class="${quiz.res[i]===true?"ok":quiz.res[i]===false?"bad":i===quiz.i?"cur":""}"></span>`).join("")}</div>
+  <div class="score"><span>Вопрос ${Math.min(quiz.i+1,quiz.qs.length)} из ${quiz.qs.length}</span><span>Верно: ${quiz.res.filter(x=>x).length}</span></div>`;
+}
+function quizAsk(){
+  const b=quiz.qs[quiz.i]; quiz.done=false; mark.clear();
+  if(quiz.type==="name"){
+    mark.set(b,"sel"); paint(); focus(b);
+    const others=shuffle(bones.filter(x=>x.ru!==b.ru&&x.region===b.region));
+    const picks=[]; for(const x of others){ if(!picks.some(p=>p.ru===x.ru)) picks.push(x); if(picks.length===3) break; }
+    if(picks.length<3) for(const x of shuffle(bones.filter(x=>x.ru!==b.ru))){ if(!picks.some(p=>p.ru===x.ru)) picks.push(x); if(picks.length===3) break; }
+    const opts=shuffle([b,...picks]);
+    qp.innerHTML=`${progressHtml()}<div class="prompt"><div class="k">Что подсвечено?</div><div class="t">Выберите название кости</div></div>
+     <div class="opts">${opts.map((o,i)=>`<button data-i="${i}">${o.ru}<br><span class="la" style="font-family:var(--f-display);font-style:italic;color:var(--muted)">${o.la}</span></button>`).join("")}</div><div id="q-fb"></div>`;
+    qp.querySelectorAll(".opts button").forEach(btn=>btn.onclick=()=>{
+      if(quiz.done) return; quiz.done=true;
+      const o=opts[+btn.dataset.i], ok=o.ru===b.ru;
+      qp.querySelectorAll(".opts button").forEach(x=>{x.disabled=true;if(opts[+x.dataset.i].ru===b.ru)x.classList.add("ok");});
+      if(!ok) btn.classList.add("bad");
+      mark.set(b,ok?"ok":"bad"); paint();
+      answer(ok,b);
+    });
+  } else {
+    paint(); setView("front");
+    qp.innerHTML=`${progressHtml()}<div class="prompt"><div class="k">Найдите на модели</div><div class="t">${full(b)}</div><div class="la">${b.la}${b.side?" "+sideLa(b.side):""}</div></div>
+     <p class="empty">Модель стоит в анатомической позиции: её правая сторона у вас слева. Кликните по кости, вращайте и приближайте модель как обычно.</p><div id="q-fb"></div>`;
+  }
+}
+function quizClick(b){
+  if(!quiz.qs||quiz.done||quiz.type!=="find"||!b) return;
+  const t=quiz.qs[quiz.i]; quiz.done=true;
+  const ok=b===t;
+  mark.set(t,"ok"); if(!ok) mark.set(b,"bad"); paint();
+  if(!ok) focus(t);
+  let note="";
+  if(!ok&&b.ru===t.ru) note=" Это та же кость, но с другой стороны.";
+  else if(!ok) note=` Вы выбрали: ${full(b)}.`;
+  answer(ok,t,note);
+}
+function answer(ok,b,note=""){
+  quiz.res[quiz.i]=ok;
+  const last=quiz.i===quiz.qs.length-1;
+  $("q-fb").outerHTML=`<div class="fb ${ok?"ok":"bad"}">${ok?"Верно.":"Неверно."} ${ok?"":`Правильный ответ: <b>${full(b)}</b>.`}${note}</div>
+   <button class="btn primary" id="q-next">${last?"Показать результат":"Следующий вопрос"}</button>`;
+  const ph=document.createElement("div"); ph.innerHTML=progressHtml();
+  qp.querySelector(".progress").replaceWith(ph.children[0]); qp.querySelector(".score").replaceWith(ph.children[0]);
+  $("q-next").onclick=()=>{ if(last) quizEnd(); else {quiz.i++;quizAsk();} };
+  $("q-next").focus({preventScroll:true});
+}
+function quizEnd(){
+  mark.clear(); paint(); setView("front");
+  const n=quiz.res.filter(x=>x).length, wrong=quiz.qs.filter((_,i)=>!quiz.res[i]);
+  qp.innerHTML=`<div class="q-head">Результат</div><div><span class="big">${n}</span><span class="empty"> из ${quiz.qs.length}</span></div>
+   ${wrong.length?`<div class="field"><label>Повторить</label><div class="mist">${wrong.map(b=>`<button class="item" data-id="${b.id}"><span>${full(b)}</span><span class="la">${b.la}</span></button>`).join("")}</div></div>`:`<p>Все ответы верные.</p>`}
+   <div class="tools"><button class="btn primary" id="q-again">Пройти ещё раз</button><button class="btn" id="q-setup">Другие настройки</button></div>`;
+  $("q-again").onclick=quizStart; $("q-setup").onclick=quizSetup;
+  qp.querySelectorAll(".mist .item").forEach(el=>el.onclick=()=>{const b=bones.find(x=>x.id===el.dataset.id);setMode("atlas");select(b,true);});
+}
+
+/* ---------- Цикл ---------- */
+function tick(now){
+  if(anim){
+    let t=Math.min(1,(now-anim.t0)/anim.ms); const e=t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
+    controls.target.lerpVectors(anim.ft,anim.tt,e); camera.position.lerpVectors(anim.fp,anim.tp,e);
+    if(t>=1) anim=null;
+  }
+  controls.update(); renderer.render(scene,camera);
+  requestAnimationFrame(tick);
+}
+controls.addEventListener("start",()=>{anim=null;});
+resize(); requestAnimationFrame(tick);
+load().catch(err=>{$("loading").textContent="Не удалось загрузить модели: "+err.message;});
+})();
+</script>
