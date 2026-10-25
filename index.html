@@ -115,6 +115,84 @@ aside{border-right:1px solid var(--line);background:var(--surface);display:flex;
 .credit{font-size:11px;color:var(--muted);border-top:1px solid var(--line);padding:10px 16px;line-height:1.4}
 .credit a{color:inherit}
 
+/* ---------- Уроки: курс по темам. Слева список тем, справа тема: лекция и практическое занятие по шагам ---------- */
+.lessons{display:none;grid-column:1/-1;grid-row:2/-1;min-height:0;grid-template-columns:300px 1fr}
+.app.les .lessons{display:grid}
+.app.les aside,.app.les .stage{display:none}
+.l-nav{border-right:1px solid var(--line);background:var(--surface);overflow:auto;padding:16px;display:flex;flex-direction:column;gap:14px;min-height:0}
+.l-head{display:flex;flex-direction:column;gap:6px}
+.meter{height:5px;border-radius:3px;background:var(--line);overflow:hidden;flex:1;min-width:60px}
+.meter span{display:block;height:100%;background:var(--ok);border-radius:3px}
+.l-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px}
+.l-topic{width:100%;border:1px solid transparent;background:none;border-radius:9px;padding:8px 10px;display:flex;align-items:center;gap:10px;text-align:left}
+.l-topic:hover{background:var(--bg)}
+.l-topic.sel{background:var(--accent-soft);border-color:color-mix(in srgb,var(--accent) 35%,transparent)}
+.l-topic[aria-disabled="true"]{color:var(--muted);cursor:not-allowed}
+.l-topic .n{flex:none;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-family:var(--f-mono);font-size:12px;border:1px solid var(--line);background:var(--surface)}
+.l-topic.done .n{background:var(--ok);border-color:var(--ok);color:var(--surface)}
+.l-topic .tx{flex:1;display:flex;flex-direction:column;min-width:0;font-weight:500}
+.l-topic small{color:var(--muted);font-weight:400;font-size:12px}
+.gr{flex:none;font-family:var(--f-mono);font-size:12px;font-weight:500;padding:2px 7px;border-radius:6px;background:var(--accent-soft);color:var(--accent)}
+.gr.g-F{background:color-mix(in srgb,var(--bad) 16%,var(--surface));color:var(--bad)}
+.l-foot{margin-top:auto;display:flex;flex-direction:column;gap:8px;border-top:1px solid var(--line);padding-top:12px}
+.l-foot .tools .btn{font-size:12px}
+.l-foot p{margin:0;font-size:12px;color:var(--muted)}
+.l-foot code{font-family:var(--f-mono);font-size:11.5px}
+.l-main{overflow:auto;min-height:0;padding:22px max(16px,env(safe-area-inset-right,0px)) 40px 28px}
+.l-main>*{max-width:920px}
+.l-main .eyebrow{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);font-weight:600}
+.l-main h2{margin:4px 0 0;font-size:26px;line-height:1.2;font-weight:600;text-wrap:balance}
+.l-main .latin{font-family:var(--f-display);font-style:italic;font-size:18px;color:var(--muted)}
+.l-main>p{max-width:68ch}
+.l-back{display:none;margin-bottom:12px}
+.goals{border:1px solid var(--line);border-radius:var(--r);background:var(--surface);padding:10px 14px;margin:12px 0}
+.goals summary{cursor:pointer;font-weight:600}
+.goals ul{margin:8px 0 2px;padding-left:20px;display:flex;flex-direction:column;gap:3px}
+.l-block{margin-top:22px;border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:16px 18px;display:flex;flex-direction:column;gap:12px}
+.l-bh{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.l-bh h3{margin:0;font-size:17px;font-weight:600}
+.l-bh>span{font-size:13px}
+.okt{color:var(--ok);font-weight:600}
+.seg2{grid-template-columns:repeat(2,minmax(0,200px))}
+.steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.step{border:1px solid var(--line);background:var(--bg);border-radius:9px;padding:8px 10px;text-align:left;display:flex;flex-direction:column;gap:2px;min-width:0}
+.step b{font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px}
+.step small{font-size:11.5px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.step .k{font-family:var(--f-mono);font-size:11px;color:var(--muted)}
+.step.done{border-color:color-mix(in srgb,var(--ok) 50%,var(--line))}
+.step.done .k{color:var(--ok)}
+.step[aria-current="step"]{border-color:var(--accent);background:var(--accent-soft)}
+.step:disabled{cursor:not-allowed;opacity:.6}
+.step-body{display:flex;flex-direction:column;gap:12px}
+.step-body>p{margin:0;color:var(--muted)}
+.prep{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px;align-items:start}
+.prep-i{display:flex;flex-direction:column;gap:8px}
+.prep-i h4{margin:0;font-size:14px;font-weight:600}
+.pl{display:flex;flex-direction:column;gap:6px}
+.player{position:relative;width:100%;max-width:760px;aspect-ratio:16/9;background:#000;border-radius:10px;overflow:hidden}
+.player.v{aspect-ratio:9/16;width:min(100%,340px,calc(70vh*9/16));margin-inline:auto}
+.player iframe,.player video{position:absolute;inset:0;width:100%;height:100%;border:0;display:block}
+.player.aud{aspect-ratio:auto;background:var(--bg);border:1px solid var(--line);padding:14px}
+.player.aud audio{width:100%;display:block}
+.player.ph{background:var(--bg);border:1.5px dashed var(--line);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:16px;text-align:center;color:var(--muted);font-size:13px}
+.player.ph b{color:var(--ink);font-weight:600}
+.player.ph a{color:var(--accent);word-break:break-all}
+.pl-meta{display:flex;align-items:center;gap:10px;font-size:12.5px;color:var(--muted);flex-wrap:wrap;min-height:28px}
+.pl-meta .btn{font-size:12px;padding:4px 9px}
+.edit{display:flex;flex-direction:column;gap:6px;border:1px dashed color-mix(in srgb,var(--accent) 45%,var(--line));border-radius:9px;padding:10px;background:color-mix(in srgb,var(--accent-soft) 45%,var(--surface))}
+.edit label{display:flex;flex-direction:column;gap:4px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.edit input{text-transform:none;letter-spacing:0;font-weight:400;color:var(--ink);width:100%;padding:7px 10px;border:1px solid var(--line);border-radius:7px;background:var(--surface);font-size:13px}
+.edit .row{display:flex;gap:6px}
+.edit .row input{flex:1;min-width:0}
+.flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin:16px 0}
+.flow div{border:1px solid var(--line);border-radius:10px;background:var(--surface);padding:12px 14px}
+.flow b{display:block;margin-bottom:3px}
+.flow span{font-size:13px;color:var(--muted)}
+.gradebox{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.gradebox .big{font-size:56px}
+.gradebox .gi{display:flex;flex-direction:column;gap:2px}
+.gradebox .gi b{font-size:17px}
+
 @media (max-width:760px){
   .app{grid-template-columns:1fr;grid-template-rows:auto 46% 1fr}
   .stage{grid-row:2}
@@ -124,15 +202,29 @@ aside{border-right:1px solid var(--line);background:var(--surface);display:flex;
   .hint{display:none}
   .card{left:8px;right:8px;width:auto;bottom:8px;max-height:calc(100% - 52px);padding:12px 14px}
   .card h2{font-size:18px}
+  .app.les{grid-template-rows:auto 1fr}
+  .app.les .lessons{display:block;overflow:auto;min-width:0}
+  .l-nav,.l-main{overflow:visible}
+  .l-nav{border-right:0;border-bottom:1px solid var(--line)}
+  .lessons.detail .l-nav{display:none}
+  .l-main{padding:16px max(16px,env(safe-area-inset-right,0px)) 32px max(16px,env(safe-area-inset-left,0px))}
+  .l-main h2{font-size:22px}
+  .l-back{display:inline-block}
+  .l-block{padding:14px}
+  .steps{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .brand{font-size:16px}
+  .tabs button{padding:6px 10px}
 }
+@media (max-width:420px){.brand i{display:none}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 
-<div class="app">
+<div class="app" id="app">
   <header>
     <div class="brand">AnatomyOS <i>Osteologia</i></div>
     <div class="tag">MVP · скелет человека</div>
     <div class="tabs" role="tablist">
+      <button id="tab-lessons" role="tab" aria-selected="false">Уроки</button>
       <button id="tab-atlas" role="tab" aria-selected="true">Атлас</button>
       <button id="tab-quiz" role="tab" aria-selected="false">Тест</button>
     </div>
@@ -162,6 +254,11 @@ aside{border-right:1px solid var(--line);background:var(--surface);display:flex;
     <div class="loading" id="loading">Загружаю скелет…</div>
     <div class="card" id="card" hidden></div>
   </main>
+
+  <section class="lessons" id="lessons">
+    <nav class="l-nav" id="l-nav" aria-label="Темы курса"></nav>
+    <div class="l-main" id="l-main"></div>
+  </section>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/three@0.147.0/build/three.min.js"></script>
@@ -465,17 +562,21 @@ const QN=10;
 const qp=$("pane-quiz");
 let quiz={type:"name",region:"all"};
 function setMode(m){
+  if(m!=="lessons") Lessons.leave();
   mode=m;
-  $("tab-atlas").setAttribute("aria-selected",m==="atlas"); $("tab-quiz").setAttribute("aria-selected",m==="quiz");
+  for(const t of ["lessons","atlas","quiz"]) $("tab-"+t).setAttribute("aria-selected",m===t);
+  $("app").classList.toggle("les",m==="lessons");
   $("pane-atlas").hidden=m!=="atlas"; qp.hidden=m!=="quiz";
   mark.clear(); select(null);
   if(m==="quiz") quizSetup(); else paint();
+  if(m==="lessons") Lessons.show();
 }
+$("tab-lessons").onclick=()=>setMode("lessons");
 $("tab-atlas").onclick=()=>setMode("atlas");
 $("tab-quiz").onclick=()=>setMode("quiz");
 
 function quizSetup(){
-  quiz.qs=null;
+  quiz.qs=null; quiz.lesson=null;
   qp.innerHTML=`<div class="q-head">Проверка знаний</div>
    <div class="field"><label>Формат</label><div class="seg">
      <button id="t-name" aria-pressed="${quiz.type==="name"}"><b>Назови кость</b><small>Кость подсвечена, выберите название</small></button>
@@ -494,18 +595,21 @@ function quizSetup(){
 }
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]];}return a;}
 function quizStart(){
-  let pool=bones.filter(b=>quiz.region==="all"?!b.phalanx:b.region===quiz.region);
+  const region=quiz.lesson?quiz.lregion:quiz.region;
+  let pool=bones.filter(b=>region==="all"?!b.phalanx:b.region===region);
   quiz.qs=shuffle(pool.slice()).slice(0,QN); quiz.i=0; quiz.res=[];
   bones.forEach(b=>b.mesh.visible=true); syncEyes();
   quizAsk();
 }
 function progressHtml(){
-  return `<div class="progress">${quiz.qs.map((_,i)=>`<span class="${quiz.res[i]===true?"ok":quiz.res[i]===false?"bad":i===quiz.i?"cur":""}"></span>`).join("")}</div>
+  return `${quiz.lesson?`<div class="score"><span>Тест по теме «${Lessons.title(quiz.lesson)}»</span></div>`:""}<div class="progress">${quiz.qs.map((_,i)=>`<span class="${quiz.res[i]===true?"ok":quiz.res[i]===false?"bad":i===quiz.i?"cur":""}"></span>`).join("")}</div>
   <div class="score"><span>Вопрос ${Math.min(quiz.i+1,quiz.qs.length)} из ${quiz.qs.length}</span><span>Верно: ${quiz.res.filter(x=>x).length}</span></div>`;
 }
 function quizAsk(){
   const b=quiz.qs[quiz.i]; quiz.done=false; mark.clear();
-  if(quiz.type==="name"){
+  // В тесте урока форматы чередуются: «Назови кость», затем «Найди на модели»
+  quiz.cur=quiz.lesson?(quiz.i%2?"find":"name"):quiz.type;
+  if(quiz.cur==="name"){
     mark.set(b,"sel"); paint(); focus(b);
     const others=shuffle(bones.filter(x=>x.ru!==b.ru&&x.region===b.region));
     const picks=[]; for(const x of others){ if(!picks.some(p=>p.ru===x.ru)) picks.push(x); if(picks.length===3) break; }
@@ -528,7 +632,7 @@ function quizAsk(){
   }
 }
 function quizClick(b){
-  if(!quiz.qs||quiz.done||quiz.type!=="find"||!b) return;
+  if(!quiz.qs||quiz.done||quiz.cur!=="find"||!b) return;
   const t=quiz.qs[quiz.i]; quiz.done=true;
   const ok=b===t;
   mark.set(t,"ok"); if(!ok) mark.set(b,"bad"); paint();
@@ -544,19 +648,417 @@ function answer(ok,b,note=""){
   $("q-fb").outerHTML=`<div class="fb ${ok?"ok":"bad"}">${ok?"Верно.":"Неверно."} ${ok?"":`Правильный ответ: <b>${full(b)}</b>.`}${note}</div>
    <button class="btn primary" id="q-next">${last?"Показать результат":"Следующий вопрос"}</button>`;
   const ph=document.createElement("div"); ph.innerHTML=progressHtml();
-  qp.querySelector(".progress").replaceWith(ph.children[0]); qp.querySelector(".score").replaceWith(ph.children[0]);
+  qp.querySelector(".progress").replaceWith(ph.querySelector(".progress")); qp.querySelector(".progress+.score").replaceWith(ph.querySelector(".progress+.score"));
   $("q-next").onclick=()=>{ if(last) quizEnd(); else {quiz.i++;quizAsk();} };
   $("q-next").focus({preventScroll:true});
 }
 function quizEnd(){
   mark.clear(); paint(); setView("front");
   const n=quiz.res.filter(x=>x).length, wrong=quiz.qs.filter((_,i)=>!quiz.res[i]);
-  qp.innerHTML=`<div class="q-head">Результат</div><div><span class="big">${n}</span><span class="empty"> из ${quiz.qs.length}</span></div>
+  const les=quiz.lesson, pct=Math.round(n/quiz.qs.length*100), g=grade(pct);
+  if(les) Lessons.saveTest(les,pct);
+  qp.innerHTML=`<div class="q-head">Результат</div>
+   ${les?`<div class="gradebox"><span class="big">${g.l}</span><div class="gi"><b>${n} из ${quiz.qs.length} · ${pct}%</b><span>${g.trad}</span></div></div><p class="empty">Оценка сохранена в уроке. Засчитывается лучшая попытка.</p>`
+     :`<div><span class="big">${n}</span><span class="empty"> из ${quiz.qs.length}</span></div>`}
    ${wrong.length?`<div class="field"><label>Повторить</label><div class="mist">${wrong.map(b=>`<button class="item" data-id="${b.id}"><span>${full(b)}</span><span class="la">${b.la}</span></button>`).join("")}</div></div>`:`<p>Все ответы верные.</p>`}
-   <div class="tools"><button class="btn primary" id="q-again">Пройти ещё раз</button><button class="btn" id="q-setup">Другие настройки</button></div>`;
-  $("q-again").onclick=quizStart; $("q-setup").onclick=quizSetup;
+   <div class="tools">${les?`<button class="btn primary" id="q-back">Вернуться к уроку</button><button class="btn" id="q-again">Пересдать</button>`:`<button class="btn primary" id="q-again">Пройти ещё раз</button><button class="btn" id="q-setup">Другие настройки</button>`}</div>`;
+  $("q-again").onclick=quizStart;
+  if(les) $("q-back").onclick=()=>{setMode("lessons");Lessons.open(les,3);}; else $("q-setup").onclick=quizSetup;
   qp.querySelectorAll(".mist .item").forEach(el=>el.onclick=()=>{const b=bones.find(x=>x.id===el.dataset.id);setMode("atlas");select(b,true);});
 }
+
+/* ---------- Уроки ---------- */
+// Порядок темы: лекция (видео или аудио, на выбор) открывает следующую тему.
+// Практическое занятие идёт по шагам: подготовительные ролики → видео занятия → тест → оценка.
+// Ссылки на ролики лежат в lessons.json; прогресс студента хранится в localStorage этого браузера.
+const TOPICS=[
+ {id:"intro",ru:"Общая остеология",la:"Osteologia generalis",region:"all",
+  desc:"Кость как орган: строение, состав, рост и развитие. Классификация костей и отделы скелета.",
+  goals:["Строение кости: компактное и губчатое вещество, надкостница, костный мозг","Классификация костей: трубчатые, губчатые, плоские, смешанные, воздухоносные","Части трубчатой кости: эпифиз, метафиз, диафиз, апофиз","Отделы скелета: осевой скелет и скелет конечностей"]},
+ {id:"spine",ru:"Позвоночный столб",la:"Columna vertebralis",region:"spine",
+  desc:"Общее строение позвонка и особенности позвонков каждого отдела. Изгибы позвоночника.",
+  goals:["Части позвонка: тело, дуга, семь отростков, позвоночное отверстие","Отличия шейных, грудных и поясничных позвонков","Атлант, осевой позвонок, VII шейный позвонок","Крестец; физиологические изгибы: лордозы и кифозы"]},
+ {id:"thorax",ru:"Грудная клетка",la:"Thorax",region:"thorax",
+  desc:"Грудина, рёбра и их соединение с позвоночником.",
+  goals:["Части грудины: рукоятка, тело, мечевидный отросток","Истинные, ложные и колеблющиеся рёбра","Строение ребра: головка, шейка, бугорок, тело, борозда","Особенности I ребра"]},
+ {id:"arm",ru:"Кости верхней конечности",la:"Ossa membri superioris",region:"arm",
+  desc:"Пояс верхней конечности (лопатка, ключица), плечевая кость и кости предплечья.",
+  goals:["Лопатка: углы, края, ость, акромион, клювовидный отросток, суставная впадина","Ключица: грудинный и акромиальный концы","Плечевая кость: головка, шейки, бугорки, мыщелок","Лучевая и локтевая кости, их взаимное расположение"]},
+ {id:"hand",ru:"Кости кисти",la:"Ossa manus",region:"hand",
+  desc:"Запястье, пясть и фаланги пальцев.",
+  goals:["Восемь костей запястья в двух рядах и их порядок","Пястные кости: основание, тело, головка","Фаланги пальцев; почему у большого пальца их две","Сесамовидные кости кисти"]},
+ {id:"leg",ru:"Кости нижней конечности",la:"Ossa membri inferioris",region:"leg",
+  desc:"Тазовая кость, бедренная кость, надколенник и кости голени.",
+  goals:["Тазовая кость: подвздошная, лобковая, седалищная; вертлужная впадина","Таз в целом: большой и малый таз, половые различия","Бедренная кость: головка, шейка, вертелы, мыщелки","Большеберцовая и малоберцовая кости, лодыжки; надколенник"]},
+ {id:"foot",ru:"Кости стопы",la:"Ossa pedis",region:"foot",
+  desc:"Предплюсна, плюсна и фаланги; своды стопы.",
+  goals:["Семь костей предплюсны: таранная, пяточная, ладьевидная, кубовидная, три клиновидные","Плюсневые кости и фаланги пальцев стопы","Продольный и поперечный своды стопы","Точки опоры стопы"]},
+ {id:"skull",ru:"Череп",la:"Cranium",region:"skull",
+  desc:"Кости мозгового и лицевого черепа, их соединения.",
+  goals:["Мозговой череп: лобная, теменные, затылочная, височные, клиновидная, решётчатая кости","Лицевой череп: верхняя и нижняя челюсти, скуловые, носовые и другие кости","Швы черепа и роднички новорождённого","Подъязычная кость"]},
+];
+const STEPS=["Подготовка","Практическое занятие","Тест","Оценка"];
+const LOCK=`<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>`;
+const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[c]);
+// Шкала оценок кредитной системы РК
+function grade(p){
+  const T=[[95,"A"],[90,"A-"],[85,"B+"],[80,"B"],[75,"B-"],[70,"C+"],[65,"C"],[60,"C-"],[55,"D+"],[50,"D"],[0,"F"]];
+  return {l:T.find(x=>p>=x[0])[1],trad:p>=90?"отлично":p>=75?"хорошо":p>=50?"удовлетворительно":"неудовлетворительно"};
+}
+
+const store={
+  get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d;}catch(e){return d;}},
+  set(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}},
+  del(k){try{localStorage.removeItem(k);}catch(e){}}
+};
+const PK="aos.lessons.v1", DK="aos.lessons.draft", AK="aos.lessons.author";
+let prog=Object.assign({m:{},t:{},pref:{}},store.get(PK,{}));
+const saveProg=()=>store.set(PK,prog);
+
+/* Медиа: YouTube (в т.ч. Shorts), файл видео/аудио (media/… или прямая ссылка), Google Drive */
+const YT_RE=/(?:youtube(?:-nocookie)?\.com\/(?:watch\?(?:.*&)?v=|shorts\/|embed\/|live\/)|youtu\.be\/)([\w-]{11})/;
+function mediaKind(src){
+  if(!src) return null;
+  const y=src.match(YT_RE); if(y) return {t:"yt",id:y[1],vertical:/\/shorts\//.test(src)};
+  const d=src.match(/drive\.google\.com\/file\/d\/([\w-]+)/); if(d) return {t:"frame",url:`https://drive.google.com/file/d/${d[1]}/preview`};
+  if(/\.(mp3|m4a|aac|ogg|oga|wav|opus)(\?|#|$)/i.test(src)) return {t:"audio"};
+  return {t:"video"};
+}
+// Видеофайл можно слушать как аудио, если отдельной аудиоверсии нет
+const audioSrc=m=>m.audio||(mediaKind(m.video)?.t==="video"?m.video:"");
+
+let ytP=null;
+function ytApi(){
+  if(ytP) return ytP;
+  ytP=new Promise((res,rej)=>{
+    if(window.YT&&window.YT.Player) return res(window.YT);
+    const prev=window.onYouTubeIframeAPIReady;
+    window.onYouTubeIframeAPIReady=()=>{prev&&prev();res(window.YT);};
+    const s=document.createElement("script"); s.src="https://www.youtube.com/iframe_api"; s.onerror=rej;
+    document.head.appendChild(s); setTimeout(()=>rej(new Error("timeout")),10000);
+  });
+  ytP.catch(()=>{ytP=null;});
+  return ytP;
+}
+
+// Просмотр засчитывается по покрытию: ролик делится на 100 отрезков, нужно реально проиграть 90 из них (перемотка не считается)
+const need=90;
+function rec(key,src){let r=prog.m[key]; if(!r||r.src!==src) r=prog.m[key]={src,c:"0".repeat(100),pos:0,done:false}; return r;}
+const isDone=(key,src)=>{const r=prog.m[key];return !!r&&r.src===src&&r.done;};
+const covered=r=>r.c.split("1").length-1;
+
+const players=new Set();
+function mountPlayer(host,o){
+  // o: {src,key,audio,onDone,empty}
+  const k=mediaKind(o.src), verb=o.audio?"Прослушано":"Просмотрено";
+  host.innerHTML=`<div class="pl"><div class="player"></div><div class="pl-meta"></div></div>`;
+  const box=host.querySelector(".player"), meta=host.querySelector(".pl-meta");
+  const P={pause(){},destroy(){}}; players.add(P);
+  let r=k||isDone(o.key,"")?rec(o.key,o.src||""):null;
+  let manual=false, last=null, saved=0;
+  const finish=()=>{if(r.done) return; r.done=true; saveProg(); status(); o.onDone&&o.onDone();};
+  function status(){
+    if(r&&r.done){meta.innerHTML=`<span class="okt">✓ ${verb}</span>`;return;}
+    if(!k){
+      meta.innerHTML=`<button class="btn" data-skip>Пропустить (демо: ролика ещё нет)</button>`;
+      meta.querySelector("[data-skip]").onclick=()=>{r=rec(o.key,"");finish();};
+      return;
+    }
+    if(manual){
+      meta.innerHTML=`<span>Здесь просмотр не отслеживается автоматически.</span><button class="btn" data-man>${o.audio?"Я прослушал до конца":"Я посмотрел до конца"}</button>`;
+      meta.querySelector("[data-man]").onclick=finish; return;
+    }
+    const n=covered(r);
+    meta.innerHTML=`<div class="meter"><span style="width:${n}%"></span></div><span>${verb} ${n}% из ${need}%</span>`;
+  }
+  function feed(t,dur){
+    if(!(dur>0)||!isFinite(dur)) return;
+    if(last!=null&&t>last&&t-last<=2.5){
+      const c=r.c.split(""), a=Math.min(99,Math.floor(last/dur*100)), b=Math.min(99,Math.floor(t/dur*100));
+      for(let i=a;i<=b;i++) c[i]="1"; r.c=c.join("");
+    }
+    last=t; r.pos=t;
+    if(covered(r)>=need) return finish();
+    if(performance.now()-saved>3000){saved=performance.now();saveProg();}
+    status();
+  }
+  if(!k){
+    box.className="player ph"+(o.vertical?" v":"");
+    box.innerHTML=o.empty||`<b>${o.audio?"Аудио":"Видео"} ещё не загружено</b><span>${author?"Вставьте ссылку в поле ниже.":"Ролик появится здесь, когда автор курса его добавит."}</span>`;
+  } else if(k.t==="video"||k.t==="audio"){
+    const el=document.createElement(o.audio||k.t==="audio"?"audio":"video");
+    el.controls=true; el.preload="metadata"; el.setAttribute("playsinline",""); el.src=o.src;
+    if(el.tagName==="AUDIO") box.classList.add("aud");
+    el.addEventListener("loadedmetadata",()=>{
+      if(el.videoHeight>el.videoWidth) box.classList.add("v");
+      if(r.pos>3&&r.pos<el.duration-5) el.currentTime=r.pos;
+      last=null;
+    });
+    el.addEventListener("seeking",()=>{last=null;});
+    el.addEventListener("timeupdate",()=>feed(el.currentTime,el.duration));
+    el.addEventListener("play",()=>pauseAll(P));
+    el.addEventListener("error",()=>{
+      if(!el.error) return;
+      box.className="player ph";
+      box.innerHTML=`<b>Не удалось открыть файл</b><a href="${esc(o.src)}" target="_blank" rel="noopener">${esc(o.src)}</a>`;
+    });
+    box.appendChild(el);
+    P.pause=()=>el.pause(); P.destroy=()=>{el.pause();el.removeAttribute("src");el.load();};
+  } else if(k.t==="yt"){
+    if(k.vertical) box.classList.add("v");
+    const slot=document.createElement("div"); box.appendChild(slot);
+    let yp=null, iv=null, dead=false;
+    P.pause=()=>{try{yp&&yp.pauseVideo();}catch(e){}};
+    P.destroy=()=>{dead=true;clearInterval(iv);try{yp&&yp.destroy();}catch(e){}};
+    ytApi().then(YT=>{
+      if(dead) return;
+      yp=new YT.Player(slot,{videoId:k.id,playerVars:{rel:0,playsinline:1,start:r.pos>3?Math.floor(r.pos):0},events:{
+        onStateChange:e=>{
+          clearInterval(iv);
+          if(e.data===YT.PlayerState.PLAYING){pauseAll(P);last=null;iv=setInterval(()=>{try{feed(yp.getCurrentTime(),yp.getDuration());}catch(err){}},400);}
+          if(e.data===YT.PlayerState.ENDED){try{feed(yp.getDuration(),yp.getDuration());}catch(err){}}
+        }}});
+    }).catch(()=>{
+      if(dead) return;
+      box.innerHTML=`<iframe src="https://www.youtube.com/embed/${k.id}?rel=0&playsinline=1" allow="encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>`;
+      manual=true; status();
+    });
+  } else {
+    box.innerHTML=`<iframe src="${esc(k.url)}" allow="autoplay; fullscreen" allowfullscreen></iframe>`;
+    manual=true;
+  }
+  status();
+  return P;
+}
+function pauseAll(except){for(const p of players) if(p!==except) p.pause();}
+function destroyPlayers(){for(const p of players) p.destroy(); players.clear();}
+
+/* Ссылки на ролики: lessons.json из репозитория; в режиме автора правится черновик в браузере */
+function blankTopic(){return {lecture:{video:"",audio:""},prep:[{title:"",src:""}],practical:""};}
+let manifest={topics:{}};
+let author=new URLSearchParams(location.search).has("author")||store.get(AK,false);
+let draft=store.get(DK,null);
+function media(tid){
+  const m=((author&&draft?draft:manifest).topics||{})[tid]||blankTopic();
+  return {lecture:Object.assign({video:"",audio:""},m.lecture),prep:Array.isArray(m.prep)?m.prep:[],practical:m.practical||""};
+}
+function editDraft(tid,fn){
+  if(!draft) draft=JSON.parse(JSON.stringify(manifest));
+  draft.topics=draft.topics||{};
+  const m=draft.topics[tid]=media(tid);
+  fn(m); store.set(DK,draft);
+}
+
+const Lessons=(()=>{
+  const sec=$("lessons"), nav=$("l-nav"), main=$("l-main");
+  let cur=null, step=0, lecP=null, resetArm=false;
+  const T=id=>TOPICS.find(t=>t.id===id);
+  const lecDone=t=>{const m=media(t.id).lecture;return isDone(t.id+":lec:v",m.video)||isDone(t.id+":lec:a",audioSrc(m));};
+  const prepDone=t=>media(t.id).prep.every((p,i)=>isDone(`${t.id}:prep:${i}`,p.src||""));
+  const pracDone=t=>isDone(t.id+":prac",media(t.id).practical);
+  const testOf=t=>prog.t[t.id];
+  const unlocked=i=>author||i===0||lecDone(TOPICS[i-1]);
+  function states(t){
+    const a=prepDone(t), b=a&&pracDone(t), c=b&&!!testOf(t);
+    return [{done:a,open:true},{done:b,open:author||a},{done:c,open:author||b},{done:c,open:c}];
+  }
+  const firstOpen=t=>{const s=states(t);const i=s.findIndex(x=>x.open&&!x.done);return i<0?3:i;};
+
+  function renderNav(){
+    const graded=TOPICS.filter(t=>testOf(t)).length;
+    nav.innerHTML=`<div class="l-head"><div class="q-head">Курс остеологии</div>
+      <div class="score"><span>${TOPICS.length} тем</span><span>Оценки: ${graded} из ${TOPICS.length}</span></div>
+      <div class="meter"><span style="width:${graded/TOPICS.length*100}%"></span></div></div>
+     <ol class="l-list">${TOPICS.map((t,i)=>{
+       const u=unlocked(i), tr=testOf(t), g=tr&&grade(tr.best), s=states(t).filter(x=>x.done).length;
+       const line=u?`Лекция ${lecDone(t)?"✓":"—"} · Практика ${Math.min(s,3)}/3`:"Откроется после лекции предыдущей темы";
+       return `<li><button class="l-topic${t.id===cur?" sel":""}${lecDone(t)&&tr?" done":""}" data-t="${t.id}"${u?"":` aria-disabled="true"`}>
+         <span class="n">${u?i+1:LOCK}</span><span class="tx"><span>${t.ru}</span><small>${line}</small></span>${g?`<span class="gr g-${g.l[0]}">${g.l}</span>`:""}</button></li>`;
+     }).join("")}</ol>
+     <div class="l-foot">
+      ${author?`<p><b>Режим автора.</b> Вставьте ссылки на YouTube или пути к файлам (<code>media/имя.mp4</code>), затем скачайте <code>lessons.json</code> и загрузите его в репозиторий. Пока файл не загружен, ролики видите только вы. Замки в этом режиме сняты.</p>
+       <div class="tools"><button class="btn primary" id="l-export">Скачать lessons.json</button>${draft?`<button class="btn" id="l-drop">Отменить правки</button>`:""}</div>`:""}
+      <div class="tools"><button class="btn" id="l-author" aria-pressed="${author}">${author?"Выйти из режима автора":"Для автора"}</button><button class="btn" id="l-reset">${resetArm?"Точно сбросить?":"Сбросить прогресс"}</button></div>
+     </div>`;
+    nav.querySelectorAll(".l-topic").forEach(b=>b.onclick=()=>{if(b.getAttribute("aria-disabled")!=="true") open(b.dataset.t);});
+    $("l-author").onclick=()=>{author=!author;store.set(AK,author);render();};
+    $("l-reset").onclick=()=>{
+      if(!resetArm){resetArm=true;renderNav();setTimeout(()=>{if(resetArm){resetArm=false;renderNav();}},4000);return;}
+      resetArm=false; prog={m:{},t:{},pref:prog.pref}; saveProg(); render();
+    };
+    if(author){
+      $("l-export").onclick=()=>{
+        const data=JSON.parse(JSON.stringify(draft||manifest)); data.topics=Object.fromEntries(TOPICS.map(t=>[t.id,media(t.id)]));
+        const a=document.createElement("a");
+        a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)+"\n"],{type:"application/json"}));
+        a.download="lessons.json"; document.body.appendChild(a); a.click(); a.remove();
+      };
+      if(draft) $("l-drop").onclick=()=>{draft=null;store.del(DK);render();};
+    }
+  }
+
+  function overview(){
+    main.innerHTML=`<div class="eyebrow">Как устроен курс</div><h2>Остеология: лекции и практические занятия</h2>
+     <p>Темы открываются по порядку. Лекцию можно смотреть или слушать, после неё открывается следующая тема. Практическое занятие проходит в четыре шага, и каждый следующий открывается только после предыдущего.</p>
+     <div class="flow">
+      <div><b>Лекция</b><span>Видео или аудио, на выбор студента. Открывает следующую тему.</span></div>
+      <div><b>1. Подготовка</b><span>Короткие ролики перед занятием. Нужно посмотреть все.</span></div>
+      <div><b>2. Практическое занятие</b><span>Видео занятия около 5 минут.</span></div>
+      <div><b>3. Тест</b><span>10 вопросов на 3D-модели: назвать кость и найти её.</span></div>
+      <div><b>4. Оценка</b><span>По шкале A–F. Засчитывается лучшая попытка.</span></div>
+     </div>
+     <p class="empty">Просмотр засчитывается, когда проиграно не меньше ${need}% ролика; перемотка не считается. Прогресс хранится в этом браузере.</p>
+     <button class="btn primary" id="l-go">${TOPICS.some(t=>lecDone(t)||testOf(t))?"Продолжить":"Начать с первой темы"}</button>`;
+    $("l-go").onclick=()=>{const i=TOPICS.findIndex((t,i)=>unlocked(i)&&!(lecDone(t)&&testOf(t)));open(TOPICS[i<0?0:i].id);};
+  }
+
+  function renderMain(){
+    destroyPlayers(); lecP=null;
+    const i=TOPICS.findIndex(t=>t.id===cur), t=TOPICS[i];
+    sec.classList.toggle("detail",!!t);
+    if(!t) return overview();
+    main.innerHTML=`<button class="btn l-back" id="l-back">← Все темы</button>
+     <div class="eyebrow">Тема ${i+1} из ${TOPICS.length}</div><h2>${t.ru}</h2><div class="latin">${t.la}</div>
+     <p>${t.desc}</p>
+     <details class="goals" open><summary>Что нужно знать</summary><ul>${t.goals.map(g=>`<li>${g}</li>`).join("")}</ul></details>
+     <button class="btn" id="l-atlas">Открыть в 3D-атласе</button>
+     <section class="l-block"><div class="l-bh"><h3>Лекция</h3><span id="lec-st"></span></div>
+      <div class="seg seg2" id="lec-fmt"><button data-f="video"><b>Видео</b><small>Смотреть лекцию</small></button><button data-f="audio"><b>Аудио</b><small>Слушать, экономит трафик</small></button></div>
+      <div id="lec-pl"></div><div id="lec-ed"></div></section>
+     <section class="l-block"><div class="l-bh"><h3>Практическое занятие</h3></div>
+      <div class="steps" id="steps"></div><div class="step-body" id="step-body"></div></section>`;
+    main.scrollTop=0; sec.scrollTop=0;
+    $("l-back").onclick=()=>{cur=null;history.replaceState(null,"","#lessons");render();};
+    $("l-atlas").onclick=()=>{
+      setMode("atlas");
+      bones.forEach(b=>b.mesh.visible=t.region==="all"||b.region===t.region); syncEyes();
+      document.querySelectorAll(".region").forEach(s=>s.classList.toggle("open",s.dataset.region===t.region));
+      setView("front");
+    };
+    main.querySelectorAll("#lec-fmt button").forEach(b=>b.onclick=()=>{prog.pref.lec=b.dataset.f;saveProg();renderLecture();});
+    renderLecture(); renderSteps(); renderStep();
+    if(wantStep!=null){$("steps").scrollIntoView({block:"start"});wantStep=null;}
+  }
+
+  function renderLecture(){
+    const t=T(cur), m=media(t.id).lecture, aud=prog.pref.lec==="audio";
+    main.querySelectorAll("#lec-fmt button").forEach(b=>b.setAttribute("aria-pressed",(b.dataset.f==="audio")===aud));
+    if(lecP){lecP.destroy();players.delete(lecP);}
+    const src=aud?audioSrc(m):m.video;
+    lecP=mountPlayer($("lec-pl"),{src,key:t.id+":lec:"+(aud?"a":"v"),audio:aud,onDone:refresh,
+      empty:aud&&m.video&&!src?`<b>Аудиоверсия ещё не загружена</b><span>Пока лекцию можно посмотреть в видео.</span>`:null});
+    lecStatus();
+    if(author) editor($("lec-ed"),[["Видео лекции",m.video],["Аудио лекции (необязательно)",m.audio]],([v,a])=>editDraft(t.id,x=>{x.lecture={video:v,audio:a};}));
+  }
+  function lecStatus(){
+    const t=T(cur), i=TOPICS.indexOf(t), next=TOPICS[i+1];
+    $("lec-st").innerHTML=lecDone(t)?`<span class="okt">✓ Пройдена${next?`. Открыта тема «${next.ru}»`:""}</span>`:`<span class="empty">${next?"После лекции откроется следующая тема":"Последняя тема курса"}</span>`;
+  }
+
+  function renderSteps(){
+    const t=T(cur), s=states(t);
+    $("steps").innerHTML=STEPS.map((n,i)=>`<button class="step${s[i].done?" done":""}" data-s="${i}"${i===step?` aria-current="step"`:""}${s[i].open?"":" disabled"}>
+      <span class="k">${s[i].done?"✓ готово":s[i].open?"Шаг "+(i+1):"закрыто"}</span><b>${s[i].open?"":LOCK}${n}</b><small>${stepHint(t,i)}</small></button>`).join("");
+    $("steps").querySelectorAll(".step").forEach(b=>b.onclick=()=>{step=+b.dataset.s;renderSteps();renderStep();});
+  }
+  function stepHint(t,i){
+    const m=media(t.id);
+    if(i===0){const n=m.prep.filter((p,j)=>isDone(`${t.id}:prep:${j}`,p.src||"")).length;return `Ролики: ${n} из ${m.prep.length}`;}
+    if(i===1) return "Видео ~5 минут";
+    if(i===2){const r=testOf(t);return r?`Попыток: ${r.n}`:"10 вопросов";}
+    const r=testOf(t); return r?`${grade(r.best).l} · ${r.best}%`:"После теста";
+  }
+  function refresh(){renderNav();lecStatus();renderSteps();stepCta();}
+  function stepCta(){
+    const el=$("step-cta"); if(!el) return;
+    const s=states(T(cur)), nx=step+1;
+    el.innerHTML=s[step].done&&nx<3&&s[nx].open?`<button class="btn primary">Дальше: ${STEPS[nx]} →</button>`:"";
+    const b=el.querySelector("button"); if(b) b.onclick=()=>{step=nx;renderSteps();renderStep();};
+  }
+
+  function renderStep(){
+    for(const p of players) if(p!==lecP){p.destroy();players.delete(p);}
+    const t=T(cur), m=media(t.id), s=states(t), body=$("step-body");
+    if(!s[step].open){
+      body.innerHTML=`<p>${LOCK} ${["","Сначала посмотрите все подготовительные ролики.","Сначала посмотрите видео практического занятия.","Оценка появится после теста."][step]}</p>`;
+      return;
+    }
+    if(step===0){
+      body.innerHTML=`<p>Короткие ролики для подготовки к занятию. Посмотрите все, чтобы открыть практическое занятие.</p><div class="prep" id="prep"></div>
+        ${author?`<div class="tools"><button class="btn" id="prep-add">+ Добавить ролик</button></div>`:""}<div id="step-cta"></div>`;
+      const host=$("prep");
+      if(!m.prep.length) host.innerHTML=`<p class="empty">Роликов пока нет.</p>`;
+      m.prep.forEach((p,j)=>{
+        const it=document.createElement("div"); it.className="prep-i";
+        it.innerHTML=`<h4>${esc(p.title)||(m.prep.length>1?`Ролик ${j+1}`:"Подготовка к занятию")}</h4><div class="pp"></div><div class="pe"></div>`;
+        host.appendChild(it);
+        mountPlayer(it.querySelector(".pp"),{src:p.src||"",key:`${t.id}:prep:${j}`,vertical:true,onDone:refresh});
+        if(author) editor(it.querySelector(".pe"),[["Название",p.title||""],["Ссылка",p.src||""]],([ti,sr])=>editDraft(t.id,x=>{x.prep[j]={title:ti,src:sr};}),
+          ()=>editDraft(t.id,x=>{x.prep.splice(j,1);}));
+      });
+      if(author) $("prep-add").onclick=()=>{editDraft(t.id,x=>{x.prep.push({title:"",src:""});});renderMain();};
+    } else if(step===1){
+      body.innerHTML=`<p>Видео практического занятия. После просмотра откроется тест.</p><div id="prac-pl"></div><div id="prac-ed"></div><div id="step-cta"></div>`;
+      mountPlayer($("prac-pl"),{src:m.practical,key:t.id+":prac",onDone:refresh});
+      if(author) editor($("prac-ed"),[["Видео занятия",m.practical]],([v])=>editDraft(t.id,x=>{x.practical=v;}));
+    } else if(step===2){
+      const r=testOf(t);
+      body.innerHTML=`<p>10 вопросов на 3D-модели по теме «${t.ru}»: по очереди «Назови кость» (кость подсвечена, выберите название) и «Найди на модели» (дано название, кликните по кости). Пересдавать можно, в оценку идёт лучшая попытка.</p>
+        ${r?`<div class="score"><span>Последняя попытка: ${r.last}%</span><span>Лучшая: ${r.best}% (${grade(r.best).l})</span></div>`:""}
+        <div class="tools"><button class="btn primary" id="l-test">${r?"Пересдать тест":"Начать тест"}</button></div><p class="empty" id="l-wait" hidden>3D-модель ещё загружается, попробуйте через несколько секунд.</p>`;
+      $("l-test").onclick=()=>{
+        if(!bones.length){$("l-wait").hidden=false;return;}
+        setMode("quiz"); quiz.lesson=t.id; quiz.lregion=t.region; quizStart();
+      };
+    } else {
+      const r=testOf(t), g=grade(r.best);
+      body.innerHTML=`<div class="gradebox"><span class="big">${g.l}</span><div class="gi"><b>${r.best}% · ${g.trad}</b>
+        <span class="empty">Лучшая из ${r.n} ${r.n===1?"попытки":"попыток"}. Последняя: ${r.last}%.</span></div></div>
+        <div class="tools"><button class="btn" id="l-retake">Пересдать тест</button></div>`;
+      $("l-retake").onclick=()=>{step=2;renderSteps();renderStep();};
+    }
+    stepCta();
+  }
+
+  // Поля режима автора: ссылки сохраняются в черновик браузера
+  function editor(host,fields,onSave,onRemove){
+    host.innerHTML=`<div class="edit">${fields.map(([l,v],i)=>`<label>${l}<input data-i="${i}" value="${esc(v)}" placeholder="https://youtu.be/…  или  media/файл.mp4"></label>`).join("")}
+      <div class="row"><button class="btn primary" data-save>Сохранить</button>${onRemove?`<button class="btn" data-rm>Удалить ролик</button>`:""}</div></div>`;
+    host.querySelector("[data-save]").onclick=()=>{onSave([...host.querySelectorAll("input")].map(x=>x.value.trim()));renderMain();renderNav();};
+    if(onRemove) host.querySelector("[data-rm]").onclick=()=>{onRemove();renderMain();renderNav();};
+  }
+
+  let loaded=false, wantStep;
+  function pickStep(){
+    if(!loaded||!cur) return;
+    const t=T(cur); step=wantStep??firstOpen(t);
+    if(!states(t)[step].open) step=firstOpen(t);
+  }
+  function render(){
+    if(!loaded){destroyPlayers();nav.innerHTML="";main.innerHTML=`<p class="empty">Загружаю уроки…</p>`;return;}
+    renderNav();renderMain();
+  }
+  function open(id,st){
+    if(!T(id)) return;
+    cur=id; wantStep=st; pickStep();
+    history.replaceState(null,"","#lessons/"+id);
+    render();
+  }
+  // Пока lessons.json не пришёл, ссылки неизвестны и статусы просмотра посчитать нельзя
+  fetch("lessons.json",{cache:"no-cache"}).then(r=>r.ok?r.json():null).catch(()=>null).then(j=>{
+    if(j&&j.topics) manifest=j;
+    loaded=true; pickStep(); if(mode==="lessons") render();
+  });
+  return {
+    show(){if(!location.hash.startsWith("#lessons")) history.replaceState(null,"",cur?"#lessons/"+cur:"#lessons");render();},
+    leave(){destroyPlayers();lecP=null;if(location.hash.startsWith("#lessons")) history.replaceState(null,"",location.pathname+location.search);},
+    open, title:id=>T(id)?.ru||"",
+    saveTest(id,pct){
+      const r=prog.t[id]||{best:0,last:0,n:0};
+      prog.t[id]={best:Math.max(r.best,pct),last:pct,n:r.n+1,at:Date.now()}; saveProg();
+    }
+  };
+})();
 
 /* ---------- Цикл ---------- */
 function tick(now){
@@ -565,11 +1067,12 @@ function tick(now){
     controls.target.lerpVectors(anim.ft,anim.tt,e); camera.position.lerpVectors(anim.fp,anim.tp,e);
     if(t>=1) anim=null;
   }
-  controls.update(); renderer.render(scene,camera);
+  if(mode!=="lessons"){controls.update(); renderer.render(scene,camera);} // в уроках сцена скрыта
   requestAnimationFrame(tick);
 }
 controls.addEventListener("start",()=>{anim=null;});
 resize(); requestAnimationFrame(tick);
 load().catch(err=>{$("loading").textContent="Не удалось загрузить модели: "+err.message;});
+if(location.hash.startsWith("#lessons")){const id=location.hash.split("/")[1];setMode("lessons");if(id) Lessons.open(id);}
 })();
 </script>

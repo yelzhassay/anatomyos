@@ -1,0 +1,109 @@
+{
+  "_help": "Ссылки на ролики курса. Подходит ссылка YouTube (обычная или Shorts), Google Drive или путь к файлу в папке media/ (например media/spine-lecture.mp4 или media/spine-lecture.mp3). Пустая строка = ролика пока нет. Проще всего заполнять на сайте: вкладка «Уроки» → «Для автора» → «Скачать lessons.json».",
+  "topics": {
+    "intro": {
+      "lecture": {
+        "video": "",
+        "audio": ""
+      },
+      "prep": [
+        {
+          "title": "",
+          "src": ""
+        }
+      ],
+      "practical": ""
+    },
+    "spine": {
+      "lecture": {
+        "video": "",
+        "audio": ""
+      },
+      "prep": [
+        {
+          "title": "",
+          "src": ""
+        }
+      ],
+      "practical": ""
+    },
+    "thorax": {
+      "lecture": {
+        "video": "",
+        "audio": ""
+      },
+      "prep": [
+        {
+          "title": "",
+          "src": ""
+        }
+      ],
+      "practical": ""
+    },
+    "arm": {
+      "lecture": {
+        "video": "",
+        "audio": ""
+      },
+      "prep": [
+        {
+          "title": "",
+          "src": ""
+        }
+      ],
+      "practical": ""
+    },
+    "hand": {
+      "lecture": {
+        "video": "",
+        "audio": ""
+      },
+      "prep": [
+        {
+          "title": "",
+          "src": ""
+        }
+      ],
+      "practical": ""
+    },
+    "leg": {
+      "lecture": {
+        "video": "",
+        "audio": ""
+      },
+      "prep": [
+        {
+          "title": "",
+          "src": ""
+        }
+      ],
+      "practical": ""
+    },
+    "foot": {
+      "lecture": {
+        "video": "",
+        "audio": ""
+      },
+      "prep": [
+        {
+          "title": "",
+          "src": ""
+        }
+      ],
+      "practical": ""
+    },
+    "skull": {
+      "lecture": {
+        "video": "",
+        "audio": ""
+      },
+      "prep": [
+        {
+          "title": "",
+          "src": ""
+        }
+      ],
+      "practical": ""
+    }
+  }
+}
