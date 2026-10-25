@@ -136,6 +136,7 @@ aside{border-right:1px solid var(--line);background:var(--surface);display:flex;
 .gr.g-F{background:color-mix(in srgb,var(--bad) 16%,var(--surface));color:var(--bad)}
 .l-foot{margin-top:auto;display:flex;flex-direction:column;gap:8px;border-top:1px solid var(--line);padding-top:12px}
 .l-foot .tools .btn{font-size:12px}
+.l-foot a{color:var(--accent)}
 .l-foot p{margin:0;font-size:12px;color:var(--muted)}
 .l-foot code{font-family:var(--f-mono);font-size:11.5px}
 .l-main{overflow:auto;min-height:0;padding:22px max(16px,env(safe-area-inset-right,0px)) 40px 28px}
@@ -179,11 +180,6 @@ aside{border-right:1px solid var(--line);background:var(--surface);display:flex;
 .player.ph a{color:var(--accent);word-break:break-all}
 .pl-meta{display:flex;align-items:center;gap:10px;font-size:12.5px;color:var(--muted);flex-wrap:wrap;min-height:28px}
 .pl-meta .btn{font-size:12px;padding:4px 9px}
-.edit{display:flex;flex-direction:column;gap:6px;border:1px dashed color-mix(in srgb,var(--accent) 45%,var(--line));border-radius:9px;padding:10px;background:color-mix(in srgb,var(--accent-soft) 45%,var(--surface))}
-.edit label{display:flex;flex-direction:column;gap:4px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
-.edit input{text-transform:none;letter-spacing:0;font-weight:400;color:var(--ink);width:100%;padding:7px 10px;border:1px solid var(--line);border-radius:7px;background:var(--surface);font-size:13px}
-.edit .row{display:flex;gap:6px}
-.edit .row input{flex:1;min-width:0}
 .flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin:16px 0}
 .flow div{border:1px solid var(--line);border-radius:10px;background:var(--surface);padding:12px 14px}
 .flow b{display:block;margin-bottom:3px}
@@ -711,7 +707,7 @@ const store={
   set(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}},
   del(k){try{localStorage.removeItem(k);}catch(e){}}
 };
-const PK="aos.lessons.v1", DK="aos.lessons.draft", AK="aos.lessons.author";
+const PK="aos.lessons.v1", AK="aos.lessons.author";
 let prog=Object.assign({m:{},t:{},pref:{}},store.get(PK,{}));
 const saveProg=()=>store.set(PK,prog);
 
@@ -784,7 +780,7 @@ function mountPlayer(host,o){
   }
   if(!k){
     box.className="player ph"+(o.vertical?" v":"");
-    box.innerHTML=o.empty||`<b>${o.audio?"Аудио":"Видео"} ещё не загружено</b><span>${author?"Вставьте ссылку в поле ниже.":"Ролик появится здесь, когда автор курса его добавит."}</span>`;
+    box.innerHTML=o.empty||`<b>${o.audio?"Аудио":"Видео"} ещё не загружено</b><span>${author?"Добавьте ссылку в админке (admin.html).":"Ролик появится здесь, когда автор курса его добавит."}</span>`;
   } else if(k.t==="video"||k.t==="audio"){
     const el=document.createElement(o.audio||k.t==="audio"?"audio":"video");
     el.controls=true; el.preload="metadata"; el.setAttribute("playsinline",""); el.src=o.src;
@@ -833,20 +829,14 @@ function mountPlayer(host,o){
 function pauseAll(except){for(const p of players) if(p!==except) p.pause();}
 function destroyPlayers(){for(const p of players) p.destroy(); players.clear();}
 
-/* Ссылки на ролики: lessons.json из репозитория; в режиме автора правится черновик в браузере */
+/* Ссылки на ролики: lessons.json из репозитория, правится в админке admin.html. Режим автора (?author) только снимает замки для просмотра */
 function blankTopic(){return {lecture:{video:"",audio:""},prep:[{title:"",src:""}],practical:""};}
 let manifest={topics:{}};
-let author=new URLSearchParams(location.search).has("author")||store.get(AK,false);
-let draft=store.get(DK,null);
+if(new URLSearchParams(location.search).has("author")) store.set(AK,true);
+let author=store.get(AK,false);
 function media(tid){
-  const m=((author&&draft?draft:manifest).topics||{})[tid]||blankTopic();
+  const m=(manifest.topics||{})[tid]||blankTopic();
   return {lecture:Object.assign({video:"",audio:""},m.lecture),prep:Array.isArray(m.prep)?m.prep:[],practical:m.practical||""};
-}
-function editDraft(tid,fn){
-  if(!draft) draft=JSON.parse(JSON.stringify(manifest));
-  draft.topics=draft.topics||{};
-  const m=draft.topics[tid]=media(tid);
-  fn(m); store.set(DK,draft);
 }
 
 const Lessons=(()=>{
@@ -876,25 +866,15 @@ const Lessons=(()=>{
          <span class="n">${u?i+1:LOCK}</span><span class="tx"><span>${t.ru}</span><small>${line}</small></span>${g?`<span class="gr g-${g.l[0]}">${g.l}</span>`:""}</button></li>`;
      }).join("")}</ol>
      <div class="l-foot">
-      ${author?`<p><b>Режим автора.</b> Вставьте ссылки на YouTube или пути к файлам (<code>media/имя.mp4</code>), затем скачайте <code>lessons.json</code> и загрузите его в репозиторий. Пока файл не загружен, ролики видите только вы. Замки в этом режиме сняты.</p>
-       <div class="tools"><button class="btn primary" id="l-export">Скачать lessons.json</button>${draft?`<button class="btn" id="l-drop">Отменить правки</button>`:""}</div>`:""}
-      <div class="tools"><button class="btn" id="l-author" aria-pressed="${author}">${author?"Выйти из режима автора":"Для автора"}</button><button class="btn" id="l-reset">${resetArm?"Точно сбросить?":"Сбросить прогресс"}</button></div>
+      ${author?`<p><b>Режим автора.</b> Замки сняты, чтобы проверить ролики. Ссылки добавляются в <a href="admin.html">админке</a>.</p>`:""}
+      <div class="tools">${author?`<button class="btn" id="l-author">Выйти из режима автора</button>`:""}<button class="btn" id="l-reset">${resetArm?"Точно сбросить?":"Сбросить прогресс"}</button></div>
      </div>`;
     nav.querySelectorAll(".l-topic").forEach(b=>b.onclick=()=>{if(b.getAttribute("aria-disabled")!=="true") open(b.dataset.t);});
-    $("l-author").onclick=()=>{author=!author;store.set(AK,author);render();};
+    if(author) $("l-author").onclick=()=>{author=false;store.del(AK);history.replaceState(null,"",location.pathname+location.hash);render();};
     $("l-reset").onclick=()=>{
       if(!resetArm){resetArm=true;renderNav();setTimeout(()=>{if(resetArm){resetArm=false;renderNav();}},4000);return;}
       resetArm=false; prog={m:{},t:{},pref:prog.pref}; saveProg(); render();
     };
-    if(author){
-      $("l-export").onclick=()=>{
-        const data=JSON.parse(JSON.stringify(draft||manifest)); data.topics=Object.fromEntries(TOPICS.map(t=>[t.id,media(t.id)]));
-        const a=document.createElement("a");
-        a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)+"\n"],{type:"application/json"}));
-        a.download="lessons.json"; document.body.appendChild(a); a.click(); a.remove();
-      };
-      if(draft) $("l-drop").onclick=()=>{draft=null;store.del(DK);render();};
-    }
   }
 
   function overview(){
@@ -924,7 +904,7 @@ const Lessons=(()=>{
      <button class="btn" id="l-atlas">Открыть в 3D-атласе</button>
      <section class="l-block"><div class="l-bh"><h3>Лекция</h3><span id="lec-st"></span></div>
       <div class="seg seg2" id="lec-fmt"><button data-f="video"><b>Видео</b><small>Смотреть лекцию</small></button><button data-f="audio"><b>Аудио</b><small>Слушать, экономит трафик</small></button></div>
-      <div id="lec-pl"></div><div id="lec-ed"></div></section>
+      <div id="lec-pl"></div></section>
      <section class="l-block"><div class="l-bh"><h3>Практическое занятие</h3></div>
       <div class="steps" id="steps"></div><div class="step-body" id="step-body"></div></section>`;
     main.scrollTop=0; sec.scrollTop=0;
@@ -948,7 +928,6 @@ const Lessons=(()=>{
     lecP=mountPlayer($("lec-pl"),{src,key:t.id+":lec:"+(aud?"a":"v"),audio:aud,onDone:refresh,
       empty:aud&&m.video&&!src?`<b>Аудиоверсия ещё не загружена</b><span>Пока лекцию можно посмотреть в видео.</span>`:null});
     lecStatus();
-    if(author) editor($("lec-ed"),[["Видео лекции",m.video],["Аудио лекции (необязательно)",m.audio]],([v,a])=>editDraft(t.id,x=>{x.lecture={video:v,audio:a};}));
   }
   function lecStatus(){
     const t=T(cur), i=TOPICS.indexOf(t), next=TOPICS[i+1];
@@ -984,23 +963,18 @@ const Lessons=(()=>{
       return;
     }
     if(step===0){
-      body.innerHTML=`<p>Короткие ролики для подготовки к занятию. Посмотрите все, чтобы открыть практическое занятие.</p><div class="prep" id="prep"></div>
-        ${author?`<div class="tools"><button class="btn" id="prep-add">+ Добавить ролик</button></div>`:""}<div id="step-cta"></div>`;
+      body.innerHTML=`<p>Короткие ролики для подготовки к занятию. Посмотрите все, чтобы открыть практическое занятие.</p><div class="prep" id="prep"></div><div id="step-cta"></div>`;
       const host=$("prep");
       if(!m.prep.length) host.innerHTML=`<p class="empty">Роликов пока нет.</p>`;
       m.prep.forEach((p,j)=>{
         const it=document.createElement("div"); it.className="prep-i";
-        it.innerHTML=`<h4>${esc(p.title)||(m.prep.length>1?`Ролик ${j+1}`:"Подготовка к занятию")}</h4><div class="pp"></div><div class="pe"></div>`;
+        it.innerHTML=`<h4>${esc(p.title)||(m.prep.length>1?`Ролик ${j+1}`:"Подготовка к занятию")}</h4><div class="pp"></div>`;
         host.appendChild(it);
         mountPlayer(it.querySelector(".pp"),{src:p.src||"",key:`${t.id}:prep:${j}`,vertical:true,onDone:refresh});
-        if(author) editor(it.querySelector(".pe"),[["Название",p.title||""],["Ссылка",p.src||""]],([ti,sr])=>editDraft(t.id,x=>{x.prep[j]={title:ti,src:sr};}),
-          ()=>editDraft(t.id,x=>{x.prep.splice(j,1);}));
       });
-      if(author) $("prep-add").onclick=()=>{editDraft(t.id,x=>{x.prep.push({title:"",src:""});});renderMain();};
     } else if(step===1){
-      body.innerHTML=`<p>Видео практического занятия. После просмотра откроется тест.</p><div id="prac-pl"></div><div id="prac-ed"></div><div id="step-cta"></div>`;
+      body.innerHTML=`<p>Видео практического занятия. После просмотра откроется тест.</p><div id="prac-pl"></div><div id="step-cta"></div>`;
       mountPlayer($("prac-pl"),{src:m.practical,key:t.id+":prac",onDone:refresh});
-      if(author) editor($("prac-ed"),[["Видео занятия",m.practical]],([v])=>editDraft(t.id,x=>{x.practical=v;}));
     } else if(step===2){
       const r=testOf(t);
       body.innerHTML=`<p>10 вопросов на 3D-модели по теме «${t.ru}»: по очереди «Назови кость» (кость подсвечена, выберите название) и «Найди на модели» (дано название, кликните по кости). Пересдавать можно, в оценку идёт лучшая попытка.</p>
@@ -1018,14 +992,6 @@ const Lessons=(()=>{
       $("l-retake").onclick=()=>{step=2;renderSteps();renderStep();};
     }
     stepCta();
-  }
-
-  // Поля режима автора: ссылки сохраняются в черновик браузера
-  function editor(host,fields,onSave,onRemove){
-    host.innerHTML=`<div class="edit">${fields.map(([l,v],i)=>`<label>${l}<input data-i="${i}" value="${esc(v)}" placeholder="https://youtu.be/…  или  media/файл.mp4"></label>`).join("")}
-      <div class="row"><button class="btn primary" data-save>Сохранить</button>${onRemove?`<button class="btn" data-rm>Удалить ролик</button>`:""}</div></div>`;
-    host.querySelector("[data-save]").onclick=()=>{onSave([...host.querySelectorAll("input")].map(x=>x.value.trim()));renderMain();renderNav();};
-    if(onRemove) host.querySelector("[data-rm]").onclick=()=>{onRemove();renderMain();renderNav();};
   }
 
   let loaded=false, wantStep;
